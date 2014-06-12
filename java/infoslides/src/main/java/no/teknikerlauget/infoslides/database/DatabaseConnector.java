@@ -1,5 +1,6 @@
 package no.teknikerlauget.infoslides.database;
 
+import javax.management.Query;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,6 +38,10 @@ public class DatabaseConnector {
 		} catch (ClassNotFoundException | SQLException exception) {
 			exception.printStackTrace();
 		}
+	}
+
+	public void sendQuery(Query query) {
+		// TODO
 	}
 
 	/**
