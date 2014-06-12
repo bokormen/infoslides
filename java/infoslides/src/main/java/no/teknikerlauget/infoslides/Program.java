@@ -1,7 +1,7 @@
 package no.teknikerlauget.infoslides;
 
 /**
- * Created by Kjell on 2014-06-12.
+ * @author Kjell
  */
 public class Program {
 
