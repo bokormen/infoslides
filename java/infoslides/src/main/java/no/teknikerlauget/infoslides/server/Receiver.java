@@ -4,9 +4,9 @@ package no.teknikerlauget.infoslides.server;
  * @author Oeyvind
  * @author kryel
  */
-public class Reciver {
+public class Receiver {
 
-	public Reciver() {
+	public Receiver() {
 		System.out.println(this.getClass().getSimpleName() + " has started");
 	}
 
