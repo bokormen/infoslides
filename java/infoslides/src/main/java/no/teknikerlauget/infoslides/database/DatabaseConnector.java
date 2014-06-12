@@ -4,6 +4,7 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Created by Oeyvind on 12.06.2014.
@@ -55,14 +56,51 @@ public class DatabaseConnector {
 	 */
 	private String databaseName_;
 
-	public DatabaseConnector(String user, String password, String url, String port, String datebaseName) {
-		new File(folderName_).mkdirs();
+	public DatabaseConnector(File propertiesPath) {
+		Properties p = readSettings(propertiesPath);
+		user_ = p.getProperty("user");
+		password_ = p.getProperty("password");
+		url_ = p.getProperty("url");
+		port_ = p.getProperty("port");
+		databaseName_ = p.getProperty("databaseName");
+	}
 
-		this.user_ = user;
-		this.password_ = password;
-		this.url_ = url;
-		this.port_ = port;
-		this.databaseName_ = datebaseName;
+	private Properties readSettings(File path) {
+		Properties p = new Properties();
+		try {
+			p.load(new FileInputStream(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return p;
+	}
+
+	private void saveCurrentProperties(File path) {
+		Properties p = new Properties();
+		p.setProperty("user", user_);
+		p.setProperty("password", password_);
+		p.setProperty("url", url_);
+		p.setProperty("port", port_);
+		p.setProperty("databaseName", databaseName_);
+		saveProperties(path, p);
+	}
+
+	private void saveProperties(File path, Properties p) {
+		try {
+			p.store(new FileOutputStream(path), "");
+		} catch (IOException e) {
+			e.printStackTrace();  // TODO
+		}
+	}
+
+	private void createDefaultPropertiesFile(File path) {
+		Properties p = new Properties();
+		p.setProperty("user", "");
+		p.setProperty("password", "");
+		p.setProperty("url", "");
+		p.setProperty("port", "");
+		p.setProperty("databaseName", "");
+		saveProperties(path, p);
 	}
 
 	/**
