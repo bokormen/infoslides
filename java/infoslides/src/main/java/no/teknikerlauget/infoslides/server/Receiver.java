@@ -2,6 +2,8 @@ package no.teknikerlauget.infoslides.server;
 
 import no.teknikerlauget.infoslides.database.DatabaseConnector;
 
+import java.io.File;
+
 /**
  * Receives new slides, changes, and instructions to delete old slides
  *
@@ -12,11 +14,10 @@ public class Receiver {
 	private DatabaseConnector databaseConnector;
 
 	/**
-	 * Construct a new receiver
+	 * Construct a new sender
 	 */
-	public Receiver(DatabaseConnector databaseConnector) {
-		this.databaseConnector = databaseConnector;
+	public Receiver(File databaseSettingsPath) {
+		this.databaseConnector = new DatabaseConnector(databaseSettingsPath);
 		databaseConnector.open();
 	}
-
 }

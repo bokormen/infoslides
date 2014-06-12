@@ -2,6 +2,8 @@ package no.teknikerlauget.infoslides.server;
 
 import no.teknikerlauget.infoslides.database.DatabaseConnector;
 
+import java.io.File;
+
 /**
  * Sends the current slide to all listening clients
  *
@@ -14,8 +16,8 @@ public class Sender {
 	/**
 	 * Construct a new sender
 	 */
-	public Sender(DatabaseConnector databaseConnector) {
-		this.databaseConnector = databaseConnector;
+	public Sender(File databaseSettingsPath) {
+		this.databaseConnector = new DatabaseConnector(databaseSettingsPath);
 		databaseConnector.open();
 	}
 
