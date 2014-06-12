@@ -10,10 +10,6 @@ import java.sql.SQLException;
  */
 public class DatabaseConnector {
 
-	static {
-		new File("Resources").mkdirs();
-	}
-
 	/**
 	 * Is used to handle the connection to the chosen database
 	 */
@@ -57,6 +53,8 @@ public class DatabaseConnector {
 	private String databaseName_;
 
 	public DatabaseConnector(String user, String password, String url, String port, String datebaseName) {
+		new File(folderName_).mkdirs();
+
 		this.user_ = user;
 		this.password_ = password;
 		this.url_ = url;
