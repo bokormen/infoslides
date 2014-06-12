@@ -4,9 +4,9 @@ package no.teknikerlauget.infoslides.server;
  * @author Oeyvind
  * @author kryel
  */
-public class Send {
+public class Sender {
 
-	public Send() {
+	public Sender() {
 		System.out.println(this.getClass().getSimpleName() + " has started");
 	}
 
