@@ -4,10 +4,15 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by Oeyvind on 12.06.2014.
+ * Takes care of the connection between the server and the database
+ *
+ * @author Oeyvind
+ * @author kryel
  */
 public class DatabaseConnector {
 
@@ -59,15 +64,52 @@ public class DatabaseConnector {
 	/**
 	 * Initiates a databaseConnector using properties from the given path
 	 *
-	 * @param propertiesPath
+	 * @param propertiesPath Path to the properties file
 	 */
 	public DatabaseConnector(File propertiesPath) {
-		Properties p = readSettings(propertiesPath);
-		user_ = p.getProperty("user");
-		password_ = p.getProperty("password");
-		url_ = p.getProperty("url");
-		port_ = p.getProperty("port");
-		databaseName_ = p.getProperty("databaseName");
+		Properties properties = findProperties(propertiesPath);
+		user_ = properties.getProperty("user");
+		password_ = properties.getProperty("password");
+		url_ = properties.getProperty("url");
+		port_ = properties.getProperty("port");
+		databaseName_ = properties.getProperty("databaseName");
+	}
+
+	/**
+	 * Reads properties from file. Makes new file if it does not currently exist.
+	 *
+	 * @param propertiesPath Path to the properties file
+	 * @return properties object
+	 */
+	private Properties findProperties(File propertiesPath) {
+		if (!propertiesPath.exists()) {
+			try {
+				propertiesPath.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();  // TODO
+			}
+			createDefaultPropertiesFile(propertiesPath);
+		}
+		Properties properties = readProperties(propertiesPath);
+		if (isMalformedPropertiesFile(properties)) {
+			createDefaultPropertiesFile(propertiesPath);
+		}
+		return properties;
+	}
+
+	/**
+	 * Checks whether or not a file contains the following properties:
+	 * -user
+	 * -password
+	 * -port
+	 * -databaseName
+	 *
+	 * @param properties file to check
+	 * @return true if the file is malformed
+	 */
+	private boolean isMalformedPropertiesFile(Properties properties) {
+		List<String> propertyNames = Arrays.asList("user", "password", "url", "port", "databaseName");
+		return !properties.stringPropertyNames().containsAll(propertyNames);
 	}
 
 	/**
@@ -76,7 +118,7 @@ public class DatabaseConnector {
 	 * @param path Where the properties file is located
 	 * @return properties object from the given path
 	 */
-	private Properties readSettings(File path) {
+	private Properties readProperties(File path) {
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(path));
@@ -135,17 +177,11 @@ public class DatabaseConnector {
 	 */
 	public void open() {
 		try {
-
-			if (isFirstRun_) {
-				readDatabaseSettingsFile();
-			}
-
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 			} catch (InstantiationException | IllegalAccessException exception) {
 				exception.printStackTrace();
 			}
-
 			connection = DriverManager.getConnection(mysqlSpecific_ + url_ + port_ + "/" + databaseName_, user_, password_);
 		} catch (ClassNotFoundException | SQLException exception) {
 			exception.printStackTrace();
@@ -163,119 +199,4 @@ public class DatabaseConnector {
 		}
 	}
 
-	/**
-	 * This is meant to be called if there doesn't exist a settings file for the database, of if there is something wrong with the existing one
-	 * It delete the existing setting file if it exist, and create a new settings file with default values
-	 */
-	protected void createDatabaseSettingsFile() {
-		try {
-			File settingsFile = new File(folderName_ + "/DBSettings.ini");
-			settingsFile.delete();
-			File settingsNewFile = new File(folderName_ + "/DBSettings.ini");
-			settingsNewFile.createNewFile();
-
-			FileWriter fileWriter = new FileWriter(settingsNewFile);
-			BufferedWriter bufferedWriter  = new BufferedWriter(fileWriter);
-
-			String comments = "#Comments: no empty line is tolerated, unless it is a value that is empty\n#lines starting with # is ignored\n#this file is expected to contain six values, one false/true, and five strings" +
-					"\n#\n#\n";
-
-			String defaultUser = "\n#Username used to connect to the server\ncache";
-			String defaultPW = "\n#Password used to connect to the server\nuser";
-
-			String defaultURL = "\n#URL this is expected to to be localhost, ip like 192.168.0.111, or something like ntnu.no, nrk.no, mysql.ntnu.no\nlocalhost";
-			String defaultPort = "\n#Port default SQL port is 3306, this is expected to be empty or the port number in use\n3306";
-			String defaultDBName = "\n#Databse name, this is the name of the database in use, if provided sql script is used, this is Cache\nCache";
-
-			String endOfFile = "\n#This is the end of this file, if password is left blank, this line must exist";
-
-			bufferedWriter.write(comments + defaultURL + defaultPort + defaultDBName + defaultUser + defaultPW + endOfFile);
-
-			bufferedWriter.flush();
-			bufferedWriter.close();
-		}
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * This reads the database settings file, if it doesn't exist, or is corrupted, it wil create a new default settings file
-	 * It reads the different settings and stores the values in the correct variables in this class
-	 */
-	private void readDatabaseSettingsFile() {
-
-		try {
-			File file = new File(folderName_ + "/DBSettings.ini");
-
-			if (!file.exists()) {
-				createDatabaseSettingsFile();
-			}
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader  = new BufferedReader(fileReader);
-
-			int noOfValues = 0;
-			String string = bufferedReader.readLine();
-
-			while (string != null) {
-				if (string.isEmpty()){
-					setValue(noOfValues, "");
-					noOfValues++;
-				}
-				else if (string.charAt(0) != '#') {
-					setValue(noOfValues, string);
-					noOfValues++;
-				}
-				string = bufferedReader.readLine();
-			}
-
-			bufferedReader.close();
-
-			if (noOfValues != 5) {
-				createDatabaseSettingsFile();
-				readDatabaseSettingsFile();
-			}
-		}
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
-	}
-
-	/**
-	 * This stores the values from a setting file in the correct variables in this class
-	 * @param i identifies which variable to set the value to
-	 * @param value this contains the value to be set
-	 */
-	private void setValue(int i, String value) {
-		switch (i) {
-			case 0:
-				url_ = value;
-				break;
-			case 1:
-				if (value.isEmpty()) {
-					port_ = value;
-				}
-				else {
-					if (value.charAt(0)==':') { //early versions demanded that the port value must be a : followed by the port number, newer version allows for just the port number
-						port_=value;
-					}
-					else {
-						port_=":"+value;
-					}
-				}
-				break;
-			case 2:
-				databaseName_ = value;
-				break;
-			case 3:
-				user_ = value;
-				break;
-			case 4:
-				password_ = value;
-				break;
-			default:
-				return;
-		}
-	}
 }

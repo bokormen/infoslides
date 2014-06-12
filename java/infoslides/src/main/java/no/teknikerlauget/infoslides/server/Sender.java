@@ -18,7 +18,7 @@ public class Sender {
 	 */
 	public Sender(File databaseSettingsPath) {
 		this.databaseConnector = new DatabaseConnector(databaseSettingsPath);
-		databaseConnector.open();
+//		databaseConnector.open();
 	}
 
 }
