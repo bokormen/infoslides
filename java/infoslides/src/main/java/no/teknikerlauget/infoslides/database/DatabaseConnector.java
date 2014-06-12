@@ -11,42 +11,50 @@ public class DatabaseConnector {
 	/**
 	 * Is used to handle the connection to the chosen database
 	 */
-	public static Connection connection;
+	public Connection connection;
 
 	/**
 	 * this contains the username used when connecting to a mysql database
 	 */
-	private static String user_ = "";
+	private String user_;
 
 	/**
 	 * this contains the password used when connecting to a mysql database
 	 */
-	private static String password_ = "";
+	private String password_;
 
 	/**
 	 * this contains part of the address used when connecting to a mysql database
 	 */
-	private static String mysqlSpecific_ = "jdbc:mysql://";
+	private String mysqlSpecific_ = "jdbc:mysql://";
 
 	/**
 	 * this contains part of the address used when connecting to a mysql database
 	 */
-	private static String url_ = "";
+	private String url_;
 
 	/**
 	 * this contains part of the address used when connecting to a mysql database
 	 */
-	private static String port_ = "";
+	private String port_;
 
 	/**
 	 * this contains part of the address used when connecting to a mysql database
 	 */
-	private static String datebaseName_ = "";
+	private String databaseName_;
+
+	public DatabaseConnector(String user, String password, String url, String port, String datebaseName) {
+		this.user_ = user;
+		this.password_ = password;
+		this.url_ = url;
+		this.port_ = port;
+		this.databaseName_ = datebaseName;
+	}
 
 	/**
 	 * This will open a connection to a mysql database
 	 */
-	public static void open() {
+	public void open() {
 		try {
 
 			try {
@@ -55,7 +63,7 @@ public class DatabaseConnector {
 				exception.printStackTrace();
 			}
 
-			connection = DriverManager.getConnection(mysqlSpecific_ + url_ + port_ + "/" + datebaseName_, user_, password_);
+			connection = DriverManager.getConnection(mysqlSpecific_ + url_ + port_ + "/" + databaseName_, user_, password_);
 		} catch (ClassNotFoundException | SQLException exception) {
 			exception.printStackTrace();
 		}
@@ -64,7 +72,7 @@ public class DatabaseConnector {
 	/**
 	 * Ends the connection to an open database connection
 	 */
-	public static void close() {
+	public void close() {
 		try {
 			if (connection != null) connection.close();
 		} catch (SQLException exception) {
