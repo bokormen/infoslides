@@ -56,6 +56,11 @@ public class DatabaseConnector {
 	 */
 	private String databaseName_;
 
+	/**
+	 * Initiates a databaseConnector using properties from the given path
+	 *
+	 * @param propertiesPath
+	 */
 	public DatabaseConnector(File propertiesPath) {
 		Properties p = readSettings(propertiesPath);
 		user_ = p.getProperty("user");
@@ -65,6 +70,12 @@ public class DatabaseConnector {
 		databaseName_ = p.getProperty("databaseName");
 	}
 
+	/**
+	 * Reads properties from file and returns a properties object
+	 *
+	 * @param path Where the properties file is located
+	 * @return properties object from the given path
+	 */
 	private Properties readSettings(File path) {
 		Properties properties = new Properties();
 		try {
@@ -75,6 +86,11 @@ public class DatabaseConnector {
 		return properties;
 	}
 
+	/**
+	 * Saves the current properties to a file at the given path
+	 *
+	 * @param path where to store the properties file
+	 */
 	private void saveCurrentProperties(File path) {
 		Properties properties = new Properties();
 		properties.setProperty("user", user_);
@@ -85,6 +101,12 @@ public class DatabaseConnector {
 		saveProperties(path, properties);
 	}
 
+	/**
+	 * Saves a given set of properties to a file at the given path
+	 *
+	 * @param path       Where the properties file is located
+	 * @param properties The set of properties that should be saved
+	 */
 	private void saveProperties(File path, Properties properties) {
 		try {
 			properties.store(new FileOutputStream(path), "");
@@ -93,6 +115,11 @@ public class DatabaseConnector {
 		}
 	}
 
+	/**
+	 * Creates and saves a default properties file at the given path
+	 *
+	 * @param path Where the properties file is located
+	 */
 	private void createDefaultPropertiesFile(File path) {
 		Properties properties = new Properties();
 		properties.setProperty("user", "");
