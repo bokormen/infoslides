@@ -15,6 +15,9 @@ public class DatabaseConnector {
 	 */
 	public Connection connection;
 
+	/**
+	 * This variable exist to make it easy to change where settings file(s) is stored
+	 */
 	private String folderName_ = "Resources";
 
 	/**
