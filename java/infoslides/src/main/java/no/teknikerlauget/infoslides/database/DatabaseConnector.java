@@ -102,20 +102,6 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Saves a given set of properties to a file at the given path
-	 *
-	 * @param path       Where the properties file is located
-	 * @param properties The set of properties that should be saved
-	 */
-	private void saveProperties(File path, Properties properties) {
-		try {
-			properties.store(new FileOutputStream(path), "");
-		} catch (IOException e) {
-			e.printStackTrace();  // TODO
-		}
-	}
-
-	/**
 	 * Creates and saves a default properties file at the given path
 	 *
 	 * @param path Where the properties file is located
@@ -128,6 +114,20 @@ public class DatabaseConnector {
 		properties.setProperty("port", "");
 		properties.setProperty("databaseName", "");
 		saveProperties(path, properties);
+	}
+
+	/**
+	 * Saves a given set of properties to a file at the given path
+	 *
+	 * @param path       Where the properties file is located
+	 * @param properties The set of properties that should be saved
+	 */
+	private void saveProperties(File path, Properties properties) {
+		try {
+			properties.store(new FileOutputStream(path), "");
+		} catch (IOException e) {
+			e.printStackTrace();  // TODO
+		}
 	}
 
 	/**
