@@ -19,12 +19,12 @@ public class DatabaseConnector {
 	 */
 	public Connection connection;
 
-	private static String folderName_ = "Resources";
+	private String folderName_ = "Resources";
 
 	/**
 	 * some functions only need to be run once, this variable is used avoid running the more than once
 	 */
-	private static boolean isFirstRun_ = true;
+	private boolean isFirstRun_ = true;
 
 	/**
 	 * this contains the username used when connecting to a mysql database
@@ -101,7 +101,7 @@ public class DatabaseConnector {
 	 * This is meant to be called if there doesn't exist a settings file for the database, of if there is something wrong with the existing one
 	 * It delete the existing setting file if it exist, and create a new settings file with default values
 	 */
-	protected static void createDatabaseSettingsFile() {
+	protected void createDatabaseSettingsFile() {
 		try {
 			File settingsFile = new File(folderName_ + "/DBSettings.ini");
 			settingsFile.delete();
@@ -138,7 +138,7 @@ public class DatabaseConnector {
 	 * This reads the database settings file, if it doesn't exist, or is corrupted, it wil create a new default settings file
 	 * It reads the different settings and stores the values in the correct variables in this class
 	 */
-	private static void readDatabaseSettingsFile() {
+	private void readDatabaseSettingsFile() {
 
 		try {
 			File file = new File(folderName_ + "/DBSettings.ini");
@@ -181,7 +181,7 @@ public class DatabaseConnector {
 	 * @param i identifies which variable to set the value to
 	 * @param value this contains the value to be set
 	 */
-	private static void setValue(int i, String value) {
+	private void setValue(int i, String value) {
 		switch (i) {
 			case 0:
 				url_ = value;
@@ -200,7 +200,7 @@ public class DatabaseConnector {
 				}
 				break;
 			case 2:
-				datebaseName_ = value;
+				databaseName_ = value;
 				break;
 			case 3:
 				user_ = value;
