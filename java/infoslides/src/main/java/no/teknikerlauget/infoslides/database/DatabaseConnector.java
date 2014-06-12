@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class DatabaseConnector {
 
 	static {
-		new File("" + folderName_).mkdirs();
+		new File("Resources").mkdirs();
 	}
 
 	/**
