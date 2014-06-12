@@ -11,10 +11,6 @@
 out/
 bin/
 
-####################
-# Prodject specific
-####################
-
 
 ######################
 # Windows
@@ -95,3 +91,9 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
+
+####################
+# Project specific
+####################
+DBSettings.properties
