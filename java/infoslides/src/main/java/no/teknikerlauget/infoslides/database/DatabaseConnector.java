@@ -66,41 +66,41 @@ public class DatabaseConnector {
 	}
 
 	private Properties readSettings(File path) {
-		Properties p = new Properties();
+		Properties properties = new Properties();
 		try {
-			p.load(new FileInputStream(path));
+			properties.load(new FileInputStream(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return p;
+		return properties;
 	}
 
 	private void saveCurrentProperties(File path) {
-		Properties p = new Properties();
-		p.setProperty("user", user_);
-		p.setProperty("password", password_);
-		p.setProperty("url", url_);
-		p.setProperty("port", port_);
-		p.setProperty("databaseName", databaseName_);
-		saveProperties(path, p);
+		Properties properties = new Properties();
+		properties.setProperty("user", user_);
+		properties.setProperty("password", password_);
+		properties.setProperty("url", url_);
+		properties.setProperty("port", port_);
+		properties.setProperty("databaseName", databaseName_);
+		saveProperties(path, properties);
 	}
 
-	private void saveProperties(File path, Properties p) {
+	private void saveProperties(File path, Properties properties) {
 		try {
-			p.store(new FileOutputStream(path), "");
+			properties.store(new FileOutputStream(path), "");
 		} catch (IOException e) {
 			e.printStackTrace();  // TODO
 		}
 	}
 
 	private void createDefaultPropertiesFile(File path) {
-		Properties p = new Properties();
-		p.setProperty("user", "");
-		p.setProperty("password", "");
-		p.setProperty("url", "");
-		p.setProperty("port", "");
-		p.setProperty("databaseName", "");
-		saveProperties(path, p);
+		Properties properties = new Properties();
+		properties.setProperty("user", "");
+		properties.setProperty("password", "");
+		properties.setProperty("url", "");
+		properties.setProperty("port", "");
+		properties.setProperty("databaseName", "");
+		saveProperties(path, properties);
 	}
 
 	/**
