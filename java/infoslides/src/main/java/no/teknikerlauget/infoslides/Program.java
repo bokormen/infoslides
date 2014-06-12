@@ -13,9 +13,12 @@ import java.util.concurrent.Executors;
  * @author kryel
  */
 public class Program {
-	private static File databaseSettingsPath = new File(""); // TODO
+	private static File databaseSettingsPath;
 
 	public static void main(String[] args) {
+		// Get the path to the database settings
+		databaseSettingsPath = new File("DBSettings.properties");
+
 		// Separate thread for Sender and Receiver using ExecutorService
 		ExecutorService es = Executors.newCachedThreadPool();
 		es.execute(() -> { new Sender(databaseSettingsPath); });
