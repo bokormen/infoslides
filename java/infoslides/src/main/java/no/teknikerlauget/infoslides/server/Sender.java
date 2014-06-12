@@ -1,5 +1,7 @@
 package no.teknikerlauget.infoslides.server;
 
+import no.teknikerlauget.infoslides.database.DatabaseConnector;
+
 /**
  * Sends the current slide to all listening clients
  *
@@ -7,12 +9,14 @@ package no.teknikerlauget.infoslides.server;
  * @author kryel
  */
 public class Sender {
+	private DatabaseConnector databaseConnector;
 
 	/**
 	 * Construct a new sender
 	 */
-	public Sender() {
-		System.out.println(this.getClass().getSimpleName() + " has started");
+	public Sender(DatabaseConnector databaseConnector) {
+		this.databaseConnector = databaseConnector;
+		databaseConnector.open();
 	}
 
 }
