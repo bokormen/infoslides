@@ -42,4 +42,11 @@ public class Theme {
 		object.put("description", description);
 		return object;
 	}
+
+	public static Theme fromJson(JSONObject json) {
+		String name = json.get("name").toString();
+		String css = json.get("css").toString();
+		String description = json.get("description").toString();
+		return new Theme(name, css, description);
+	}
 }

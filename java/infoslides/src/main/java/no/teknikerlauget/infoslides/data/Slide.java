@@ -50,4 +50,12 @@ public class Slide {
 		object.put("picture", picture);
 		return object;
 	}
+
+	public static Slide fromJson(JSONObject json) {
+		int id = Integer.parseInt(json.get("id").toString());
+		String title = json.get("title").toString();
+		String text = json.get("text").toString();
+		String picture = json.get("picture").toString();
+		return new Slide(id, title, text, picture);
+	}
 }
