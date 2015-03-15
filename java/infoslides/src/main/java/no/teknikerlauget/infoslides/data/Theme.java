@@ -26,6 +26,15 @@ public class Theme {
 		return description;
 	}
 
+	@Override
+	public String toString() {
+		return "Theme{" +
+				"name='" + name + '\'' +
+				", css='" + css + '\'' +
+				", description='" + description + '\'' +
+				'}';
+	}
+
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		object.put("name", name);

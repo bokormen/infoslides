@@ -32,6 +32,16 @@ public class Day {
 		return endTime;
 	}
 
+	@Override
+	public String toString() {
+		return "Day{" +
+				"id=" + id +
+				", day='" + day + '\'' +
+				", startTime='" + startTime + '\'' +
+				", endTime='" + endTime + '\'' +
+				'}';
+	}
+
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		object.put("id", id);

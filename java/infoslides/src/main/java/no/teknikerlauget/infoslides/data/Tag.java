@@ -55,6 +55,19 @@ public class Tag {
 		return repeat;
 	}
 
+	@Override
+	public String toString() {
+		return "Tag{" +
+				"id=" + id +
+				", tag='" + tag + '\'' +
+				", overrideOtherTags=" + overrideOtherTags +
+				", startDate=" + startDate +
+				", endDate=" + endDate +
+				", days=" + days +
+				", repeat='" + repeat + '\'' +
+				'}';
+	}
+
 	/**
 	 * Creates and returns a JSONObject with the data from this object
 	 *

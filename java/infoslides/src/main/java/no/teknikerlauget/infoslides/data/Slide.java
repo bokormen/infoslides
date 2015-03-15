@@ -32,6 +32,16 @@ public class Slide {
 		return picture;
 	}
 
+	@Override
+	public String toString() {
+		return "Slide{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", text='" + text + '\'' +
+				", picture='" + picture + '\'' +
+				'}';
+	}
+
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		object.put("id", id);
