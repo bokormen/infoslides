@@ -1,5 +1,6 @@
 package no.teknikerlauget.infoslides.data;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -67,11 +68,11 @@ public class Slide {
 		object.put("picture", picture);
 		object.put("theme", theme.toJson());
 		// Add tags
-		List<JSONObject> jsonTags = new ArrayList<>();
+		JSONArray jsonArray = new JSONArray();
 		for (Tag tag : tags) {
-			jsonTags.add(tag.toJson());
+			jsonArray.add(tag.getTag());
 		}
-		object.put("tags", jsonTags);
+		object.put("tags", jsonArray);
 		return object;
 	}
 
@@ -81,9 +82,8 @@ public class Slide {
 		String text = json.get("text").toString();
 		String picture = json.get("picture").toString();
 		Theme theme = Theme.fromJson((JSONObject) json.get("theme"));
-		List<Tag> tags = new ArrayList<>();
-		JSONObject jsonTagList = (JSONObject) json.get(tags);
-		// TODO Fill tags
+		JSONArray tagArray = (JSONArray) (json.get("tags"));
+		ArrayList tags = new ArrayList(tagArray);
 		return new Slide(id, title, text, picture, theme, tags);
 	}
 }
