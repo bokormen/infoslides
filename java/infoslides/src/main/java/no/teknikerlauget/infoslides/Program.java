@@ -21,8 +21,8 @@ public class Program {
 
 		// Separate thread for Sender and Receiver using ExecutorService
 		ExecutorService es = Executors.newCachedThreadPool();
-		es.execute(() -> { new Sender(databaseSettingsPath); });
-		es.execute(() -> { new Receiver(databaseSettingsPath); });
+		es.execute(() -> new Sender(databaseSettingsPath));
+		es.execute(() -> new Receiver(databaseSettingsPath));
 	}
 
 }
