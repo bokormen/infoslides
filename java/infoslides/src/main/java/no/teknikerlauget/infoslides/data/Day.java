@@ -40,4 +40,12 @@ public class Day {
 		object.put("endTime", endTime);
 		return object;
 	}
+
+	public static Day fromJson(JSONObject json) {
+		int id = Integer.parseInt(json.get("id").toString());
+		String day = json.get("day").toString();
+		String startTime = json.get("startTime").toString();
+		String endTime = json.get("endTime").toString();
+		return new Day(id, day, startTime, endTime);
+	}
 }
