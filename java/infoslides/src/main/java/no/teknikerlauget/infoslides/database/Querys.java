@@ -10,8 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Oeyvind on 12.06.2014.
@@ -37,6 +36,8 @@ public class Querys extends DatabaseConnector {
 	}
 
 	public List<Slide> GetSlideshow() {
+		String currentClockTime = GetCurrentClockTime();
+		String currentDate = GetCurrentDate();
 		List<Slide> slides = new ArrayList<Slide>();
 		//TODO
 		return slides;
@@ -47,8 +48,8 @@ public class Querys extends DatabaseConnector {
 	}
 
 	public void EditSlide(Slide slide){
-		//TODO
 		UpdateSlideTags(slide);
+		//TODO
 	}
 
 	public void DeleteSlide(Slide slide) {
@@ -85,8 +86,8 @@ public class Querys extends DatabaseConnector {
 	}
 
 	public void EditTag(Tag tag) {
-		//TODO
 		UpdateTagDays(tag);
+		//TODO
 	}
 
 	/**
@@ -178,5 +179,15 @@ public class Querys extends DatabaseConnector {
 		List<Slide> slides = new ArrayList<Slide>();
 		//TODO
 		return slides;
+	}
+
+	private String GetCurrentClockTime() {
+		Calendar current = new GregorianCalendar();
+		return String.format("%02d", current.get(Calendar.HOUR_OF_DAY)) + ":" + current.get(Calendar.MINUTE);
+	}
+
+	private String GetCurrentDate() {
+		Calendar current = new GregorianCalendar();
+		return simpleDateFormat.format(current.getTime());
 	}
 }
