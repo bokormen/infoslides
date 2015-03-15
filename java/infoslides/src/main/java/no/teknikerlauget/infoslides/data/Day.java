@@ -32,6 +32,16 @@ public class Day {
 		return endTime;
 	}
 
+	@Override
+	public String toString() {
+		return "Day{" +
+				"id=" + id +
+				", day='" + day + '\'' +
+				", startTime='" + startTime + '\'' +
+				", endTime='" + endTime + '\'' +
+				'}';
+	}
+
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		object.put("id", id);
@@ -39,5 +49,13 @@ public class Day {
 		object.put("startTime", startTime);
 		object.put("endTime", endTime);
 		return object;
+	}
+
+	public static Day fromJson(JSONObject json) {
+		int id = Integer.parseInt(json.get("id").toString());
+		String day = json.get("day").toString();
+		String startTime = json.get("startTime").toString();
+		String endTime = json.get("endTime").toString();
+		return new Day(id, day, startTime, endTime);
 	}
 }
