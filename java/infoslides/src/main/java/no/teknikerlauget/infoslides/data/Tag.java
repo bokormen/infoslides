@@ -2,21 +2,19 @@ package no.teknikerlauget.infoslides.data;
 
 import org.json.simple.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Tag {
 
 	private final String tag;
 	private final boolean overrideOtherTags;
-	private final Date startDate;
-	private final Date endDate;
+	private final String startDate;
+	private final String endDate;
 	private final List<Day> days;
 	private final String repeat;
 
-	public Tag(String tag, boolean overrideOtherTags, Date startDate, Date endDate, List<Day> days, String repeat) {
+	public Tag(String tag, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
 		this.tag = tag;
 		this.overrideOtherTags = overrideOtherTags;
 		this.startDate = startDate;
@@ -33,11 +31,11 @@ public class Tag {
 		return overrideOtherTags;
 	}
 
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
@@ -67,15 +65,12 @@ public class Tag {
 	 * @return this object as a JSONObject
 	 */
 	public JSONObject toJson() {
-		// Used for formatting start- and endDate
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
 		object.put("tag", tag);
 		object.put("overrideOtherTags", overrideOtherTags);
-		object.put("startDate", sdf.format(startDate));
-		object.put("endDate", sdf.format(endDate));
+		object.put("startDate", startDate);
+		object.put("endDate", endDate);
 		object.put("repeat", repeat);
 
 		// Add the list of days
@@ -91,12 +86,10 @@ public class Tag {
 	public static Tag fromJson(JSONObject json) {
 		String tag = json.get("tag").toString();
 		boolean overrideOtherTags = Boolean.parseBoolean(json.get("overrideOtherTags").toString());
-
-		// TODO
-		Date startDate = null;
-		Date endDate = null;
-		List<Day> days = null;
-		String repeat = null;
+		String startDate = json.get("startDate").toString();
+		String endDate = json.get("endDate").toString();
+		String repeat = json.get("repeat").toString();
+		List<Day> days = null; // TODO
 		return new Tag(tag, overrideOtherTags, startDate, endDate, days, repeat);
 	}
 }
