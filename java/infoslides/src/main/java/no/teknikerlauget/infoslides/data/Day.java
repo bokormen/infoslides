@@ -1,5 +1,7 @@
 package no.teknikerlauget.infoslides.data;
 
+import org.json.simple.JSONObject;
+
 public class Day {
 
 	private final int id;
@@ -28,5 +30,14 @@ public class Day {
 
 	public String getEndTime() {
 		return endTime;
+	}
+
+	public JSONObject toJson() {
+		JSONObject object = new JSONObject();
+		object.put("id", id);
+		object.put("day", day);
+		object.put("startTime", startTime);
+		object.put("endTime", endTime);
+		return object;
 	}
 }
