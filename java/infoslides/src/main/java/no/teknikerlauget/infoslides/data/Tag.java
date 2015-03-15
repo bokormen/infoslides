@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Tag {
 
-	private final int id;
 	private final String tag;
 	private final boolean overrideOtherTags;
 	private final Date startDate;
@@ -17,18 +16,13 @@ public class Tag {
 	private final List<Day> days;
 	private final String repeat;
 
-	public Tag(int id, String tag, boolean overrideOtherTags, Date startDate, Date endDate, List<Day> days, String repeat) {
-		this.id = id;
+	public Tag(String tag, boolean overrideOtherTags, Date startDate, Date endDate, List<Day> days, String repeat) {
 		this.tag = tag;
 		this.overrideOtherTags = overrideOtherTags;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.days = days;
 		this.repeat = repeat;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public String getTag() {
@@ -58,8 +52,7 @@ public class Tag {
 	@Override
 	public String toString() {
 		return "Tag{" +
-				"id=" + id +
-				", tag='" + tag + '\'' +
+				"tag='" + tag + '\'' +
 				", overrideOtherTags=" + overrideOtherTags +
 				", startDate=" + startDate +
 				", endDate=" + endDate +
@@ -79,7 +72,6 @@ public class Tag {
 
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
-		object.put("id", id);
 		object.put("tag", tag);
 		object.put("overrideOtherTags", overrideOtherTags);
 		object.put("startDate", sdf.format(startDate));
@@ -94,5 +86,17 @@ public class Tag {
 		object.put("days", jsonDays);
 
 		return object;
+	}
+
+	public static Tag fromJson(JSONObject json) {
+		String tag = json.get("tag").toString();
+		boolean overrideOtherTags = Boolean.parseBoolean(json.get("overrideOtherTags").toString());
+
+		// TODO
+		Date startDate = null;
+		Date endDate = null;
+		List<Day> days = null;
+		String repeat = null;
+		return new Tag(tag, overrideOtherTags, startDate, endDate, days, repeat);
 	}
 }
