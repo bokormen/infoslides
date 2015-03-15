@@ -13,13 +13,20 @@ import java.sql.SQLException;
  * @author kryel
  */
 public class DatabaseConnector {
+	/**
+	 * Is used to store MySQL settings
+	 */
 	private Settings settings;
 
 	/**
 	 * Is used to handle the connection to the chosen database
 	 */
-	private Connection connection;
+	protected Connection connection;
 
+	/**
+	 * Reads settings for a MySQL connection, and stores them in settings
+	 * @param propertiesPath
+	 */
 	public DatabaseConnector(File propertiesPath) {
 		this.settings = new Settings(propertiesPath);
 	}
@@ -29,13 +36,17 @@ public class DatabaseConnector {
 	 */
 	public void open() {
 		try {
+
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-			} catch (InstantiationException | IllegalAccessException exception) {
+			}
+			catch (InstantiationException | IllegalAccessException exception) {
 				exception.printStackTrace();
 			}
+
 			connection = DriverManager.getConnection(settings.getDatabaseUrl(), settings.getUser(), settings.getPassword());
-		} catch (ClassNotFoundException | SQLException exception) {
+		}
+		catch (ClassNotFoundException | SQLException exception) {
 			exception.printStackTrace();
 		}
 	}
