@@ -11,8 +11,10 @@ import java.io.File;
  * @author kryel
  */
 public class Sender {
+
 	private DatabaseConnector databaseConnector;
 	private long sleepTime = 10000;
+	private boolean running = true;
 
 	/**
 	 * Construct a new sender
@@ -30,7 +32,7 @@ public class Sender {
 		try {
 			sendLoop();
 		} catch (InterruptedException e) {
-			e.printStackTrace();  // TODO
+			e.printStackTrace();
 		}
 	}
 
@@ -40,7 +42,7 @@ public class Sender {
 	 * @throws InterruptedException
 	 */
 	private void sendLoop() throws InterruptedException {
-		while (true) {
+		while (running) {
 			sendSlide();
 			Thread.sleep(sleepTime);
 		}
