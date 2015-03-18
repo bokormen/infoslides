@@ -1,6 +1,7 @@
 package no.teknikerlauget.infoslides.server;
 
 import no.teknikerlauget.infoslides.database.DatabaseConnector;
+import org.eclipse.jetty.util.preventers.SecurityProviderLeakPreventer;
 
 import java.io.File;
 
@@ -29,22 +30,22 @@ public class Sender {
 	 * Start sending slides to clients
 	 */
 	private void startSending() {
-		try {
-			sendLoop();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		while (running) {
+			sendSlide();
+			sleep(sleepTime);
 		}
 	}
 
 	/**
-	 * Send slides at regular intervals
+	 * Calls Thread.sleep with the given time
 	 *
-	 * @throws InterruptedException
+	 * @param sleepTime How long the thread should sleep
 	 */
-	private void sendLoop() throws InterruptedException {
-		while (running) {
-			sendSlide();
+	private void sleep(long sleepTime) {
+		try {
 			Thread.sleep(sleepTime);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
