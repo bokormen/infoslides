@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * Created by Oeyvind on 12.06.2014.
  */
-public class Querys extends DatabaseConnector {
+public class DatabaseQueries extends DatabaseConnector {
 
 	/**
 	 * Formats the date in a way that can be stored in database as a string, and still be ordered correctly in the database when ordering on data
@@ -31,7 +31,7 @@ public class Querys extends DatabaseConnector {
 	 *
 	 * @param propertiesPath
 	 */
-	public Querys(File propertiesPath) {
+	public DatabaseQueries(File propertiesPath) {
 		super(propertiesPath);
 	}
 
