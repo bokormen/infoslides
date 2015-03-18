@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../css/editor-style.css" />
+    <script src="../javascript/languages.js"></script>
+    <script src="../javascript/jQuery.js"></script>
+    <script src="../javascript/bootstrap.min.js"></script>
+    <script src="../javascript/editorJS.js"></script>
+    <script>
+        lang = nb_NO;
+    </script>
+
+    <title></title>
+</head>
+<body>
+<div id="mainContainer" class="container">
+    <div class="page-header">
+        <h1>InfoSlides <small><script>print('org');</script></small></h1>
+    </div>
+
+    <nav>
+        <ul class="nav nav-tabs">
+            <li role="presentation" id="showSlides"><a href="#"><script>print('slides');</script></a></li>
+            <li role="presentation" id="showTags"><a href="#"><script>print('tags');</script></a></li>
+            <li role="presentation" id="showThemes"><a href="#"><script>print('themes');</script></a></li>
+        </ul>
+    </nav>
+
+    <div id="pageContent" class="panel">
+        <div id="slideContent" class="hidden">
+
+            <div id="slideList" class="col-sm-1 panel panel-default">
+                <button type="button" class="btn btn-primary" id="addSlide"><script>print('add slide');</script></button>
+                <ul class="list-group">
+                </ul>
+            </div>
+
+            <div id="slideEditor" class="pageEditors col-lg-9">
+                <form>
+                    <div class="input-group row">
+                        <span class="input-group-addon"><label for="slideName"><script>print('name')</script></label></span>
+                        <input type="text" class="form-control" id="slideName" />
+                    </div>
+
+                    <div class="input-group row">
+                        <span class="input-group-addon"><label for="slideText"><script>print('text');</script></label></span>
+                        <textarea class="form-control" id="slideText"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3 class="panel-title"><label for="slideImageChooser"><script>print('picture')</script></label></h3></div>
+                                <div class="panel-body">
+                                <span class="btn btn-default btn-file">
+                                    <script>print('browse');</script> <input type="file" id="slideImageChooser">
+                                </span>
+                                <img src="" id="slideImagePreview" class="img-thumbnail" />
+                                <div class="alert alert-danger fade in" id="slideImageError">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <script>print('upload image');</script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label><script>print('tags')</script></label></div>
+                            <div class="panel-body">
+                                <select id="slideSelectTagsFrom" multiple size="6" class="form-control">
+                                    <option class="dropdown-header" disabled="disabled"><script>print('not selected')</script></option>
+                                </select>
+
+                                <div id="slideSelectTagsButtons">
+                                    <button class="btn btn-default" id="slideSelectAdd"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                                    <button class="btn btn-default" id="slideSelectRemove"><span class="glyphicon glyphicon-arrow-left"></span></button>
+                                </div>
+
+                                <select id="slideSelectTagsTo" multiple size="6" class="form-control">
+                                    <option class="dropdown-header" disabled="disabled"><script>print('selected')</script></option>
+                                    <option value="a">aa</option>
+                                    <option value="b">b</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-addon"><label for="slideSelectTheme"><script>print('theme');</script></label></div>
+                        <select class="form-control" id="slideSelectTheme">
+                            <option value="-1"><script>print('select theme');</script></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group row">
+                        <button type="button" class="btn btn-default" id="slideDelete"><script>print('delete');</script></button>
+                        <button type="button" class="btn btn-default" id="slideCancel"><script>print('cancel');</script></button>
+                        <button type="button" class="btn btn-primary" id="slideSubmit"><script>print('submit');</script></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
