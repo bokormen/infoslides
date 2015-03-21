@@ -1,6 +1,7 @@
 package no.teknikerlauget.infoslides.data;
 
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,59 @@ public class Tag {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		System.out.println(this.toString());
+		System.out.println(o);
+
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Tag tag = (Tag) o;
+
+		if (id != tag.id) {
+			return false;
+		}
+		if (overrideOtherTags != tag.overrideOtherTags) {
+			return false;
+		}
+		if (!days.equals(tag.days)) {
+			return false;
+		}
+		if (!endDate.equals(tag.endDate)) {
+			return false;
+		}
+		if (!name.equals(tag.name)) {
+			return false;
+		}
+		if (!repeat.equals(tag.repeat)) {
+			return false;
+		}
+		if (!startDate.equals(tag.startDate)) {
+			return false;
+		}
+
+
+		System.out.println("TRUE");
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + (overrideOtherTags ? 1 : 0);
+		result = 31 * result + startDate.hashCode();
+		result = 31 * result + endDate.hashCode();
+		result = 31 * result + days.hashCode();
+		result = 31 * result + repeat.hashCode();
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		return "Tag{" +
 				"id=" + id +
@@ -82,9 +136,9 @@ public class Tag {
 		object.put("repeat", repeat);
 
 		// Add the list of days
-		List<JSONObject> jsonDays = new ArrayList<>();
+		List<Day> jsonDays = new ArrayList<>();
 		for (Day day : days) {
-			jsonDays.add(day.toJson());
+			jsonDays.add(day);
 		}
 		object.put("days", jsonDays);
 
@@ -98,7 +152,14 @@ public class Tag {
 		String startDate = json.get("startDate").toString();
 		String endDate = json.get("endDate").toString();
 		String repeat = json.get("repeat").toString();
-		List<Day> days = null; // TODO
+
+		JSONArray dayList = (JSONArray) json.get("days");
+		List<Day> days = new ArrayList<>();
+		for (int i = 0; i < dayList.length(); i++) {
+			JSONObject day = dayList.getJSONObject(i);
+			days.add(new Day(day.getInt("id"), day.getInt("day"), day.getString("startTime"), day.getString("endTime")));
+		}
+
 		return new Tag(id, tag, overrideOtherTags, startDate, endDate, days, repeat);
 	}
 }

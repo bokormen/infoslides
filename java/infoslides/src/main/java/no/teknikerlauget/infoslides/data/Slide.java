@@ -1,7 +1,7 @@
 package no.teknikerlauget.infoslides.data;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +49,50 @@ public class Slide {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Slide slide = (Slide) o;
+
+		if (id != slide.id) {
+			return false;
+		}
+		if (!picture.equals(slide.picture)) {
+			return false;
+		}
+		if (!tagIdList.equals(slide.tagIdList)) {
+			return false;
+		}
+		if (!text.equals(slide.text)) {
+			return false;
+		}
+		if (!theme.equals(slide.theme)) {
+			return false;
+		}
+		if (!title.equals(slide.title)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id;
+		result = 31 * result + title.hashCode();
+		result = 31 * result + text.hashCode();
+		result = 31 * result + picture.hashCode();
+		result = 31 * result + theme.hashCode();
+		result = 31 * result + tagIdList.hashCode();
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		return "Slide{" +
 				"id=" + id +
@@ -69,9 +113,7 @@ public class Slide {
 		object.put("theme", theme.toJson());
 		// Add tags
 		JSONArray jsonArray = new JSONArray();
-		for (Integer tag : tagIdList) {
-			jsonArray.add(tag);
-		}
+		tagIdList.forEach(jsonArray::put);
 		object.put("tags", jsonArray);
 		return object;
 	}
@@ -84,9 +126,8 @@ public class Slide {
 		Theme theme = Theme.fromJson((JSONObject) json.get("theme"));
 		JSONArray tagArray = (JSONArray) (json.get("tags"));
 		ArrayList<Integer> tags = new ArrayList<>();
-		for (Object tag : tagArray) {
-			int tagId = Integer.parseInt((String) tag);
-			tags.add(tagId);
+		for (int i = 0; i < tagArray.length(); i++) {
+			tags.add(tagArray.getInt(i));
 		}
 		return new Slide(id, title, text, picture, theme, tags);
 	}

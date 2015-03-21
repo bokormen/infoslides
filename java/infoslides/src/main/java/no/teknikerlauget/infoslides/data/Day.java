@@ -1,15 +1,15 @@
 package no.teknikerlauget.infoslides.data;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class Day {
 
 	private final int id;
-	private final String day;
+	private final int day;
 	private final String startTime;
 	private final String endTime;
 
-	public Day(int id, String day, String startTime, String endTime) {
+	public Day(int id, int day, String startTime, String endTime) {
 		this.id = id;
 		this.day = day;
 		this.startTime = startTime;
@@ -20,7 +20,7 @@ public class Day {
 		return id;
 	}
 
-	public String getDay() {
+	public int getDay() {
 		return day;
 	}
 
@@ -30,16 +30,6 @@ public class Day {
 
 	public String getEndTime() {
 		return endTime;
-	}
-
-	@Override
-	public String toString() {
-		return "Day{" +
-				"id=" + id +
-				", day='" + day + '\'' +
-				", startTime='" + startTime + '\'' +
-				", endTime='" + endTime + '\'' +
-				'}';
 	}
 
 	@Override
@@ -53,16 +43,16 @@ public class Day {
 
 		Day day1 = (Day) o;
 
+		if (day != day1.day) {
+			return false;
+		}
 		if (id != day1.id) {
 			return false;
 		}
-		if (day != null ? !day.equals(day1.day) : day1.day != null) {
+		if (!endTime.equals(day1.endTime)) {
 			return false;
 		}
-		if (endTime != null ? !endTime.equals(day1.endTime) : day1.endTime != null) {
-			return false;
-		}
-		if (startTime != null ? !startTime.equals(day1.startTime) : day1.startTime != null) {
+		if (!startTime.equals(day1.startTime)) {
 			return false;
 		}
 
@@ -72,10 +62,20 @@ public class Day {
 	@Override
 	public int hashCode() {
 		int result = id;
-		result = 31 * result + (day != null ? day.hashCode() : 0);
-		result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-		result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+		result = 31 * result + day;
+		result = 31 * result + startTime.hashCode();
+		result = 31 * result + endTime.hashCode();
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Day{" +
+				"id=" + id +
+				", day='" + day + '\'' +
+				", startTime='" + startTime + '\'' +
+				", endTime='" + endTime + '\'' +
+				'}';
 	}
 
 	public JSONObject toJson() {
@@ -89,7 +89,7 @@ public class Day {
 
 	public static Day fromJson(JSONObject json) {
 		int id = Integer.parseInt(json.get("id").toString());
-		String day = json.get("day").toString();
+		int day = Integer.parseInt(json.get("day").toString());
 		String startTime = json.get("startTime").toString();
 		String endTime = json.get("endTime").toString();
 		return new Day(id, day, startTime, endTime);
