@@ -9,6 +9,7 @@ import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -77,8 +78,35 @@ public class DatabaseQueries extends DatabaseConnector {
 		InsertNewTagRefences(slide);
 	}
 
+	/**
+	 * This method inserts the given tag as a new tag in the database
+	 * @param tag this should be a tag sent from edit page with id -1
+	 */
 	public void NewTag(Tag tag) {
-		//TODO
+		try {
+
+			String line = "INSERT INTO `Tags` (`Tag`, `Startdate`, `Enddate`, `Repeatweeks`) VALUES " + "(?, ?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line, Statement.RETURN_GENERATED_KEYS);
+
+			preparedStatement.setString(1, tag.getName());
+			preparedStatement.setString(2, tag.getStartDate());
+			preparedStatement.setString(3, tag.getEndDate());
+			preparedStatement.setString(4, tag.getRepeat().name());
+
+			preparedStatement.executeUpdate();
+
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			generatedKeys.next();
+
+			System.out.printf("Skrev en Tag til databasen og får rapportert at den har fått id'en " + generatedKeys.getInt(1));
+
+			InsertDays(generatedKeys.getInt(1), tag.getDays());
+
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
 	public void DeleteTag(Tag tag) {
@@ -86,40 +114,31 @@ public class DatabaseQueries extends DatabaseConnector {
 	}
 
 	public void EditTag(Tag tag) {
-		UpdateTagDays(tag);
 		//TODO
 	}
 
-	/**
-	 * Deletes all elements in the table tagdays referring to the tag given
-	 * @param tag
-	 */
-	private void DeleteOldDayReferences(Tag tag) {
+	public void InsertDays(int tagid, List<Day> days) {
 		//TODO
+		try {
+
+			String line = "INSERT INTO `Days` (`Dayname`, `Starttime`, `Endtime`, `Tagid`) VALUES " + "(?, ?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			for (Day day : days) {
+				preparedStatement.setInt(1, day.getDay());
+				preparedStatement.setString(2, day.getStartTime());
+				preparedStatement.setString(3, day.getEndTime());
+				preparedStatement.setInt(4, tagid);
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
-	/**
-	 * Links tags to the given stag in the table tagdays
-	 * @param tag
-	 */
-	private void InsertNewDayRefences(Tag tag) {
-		//TODO
-	}
-
-	private void UpdateTagDays(Tag tag) {
-		DeleteOldDayReferences(tag);
-		InsertNewDayRefences(tag);
-	}
-
-	public void NewDay(Day day) {
-		//TODO
-	}
-
-	public void EditDay(Day day) {
-		//TODO
-	}
-
-	public void DeleteDay(Day day) {
+	public void DeleteDays(int tagid) {
 		//TODO
 	}
 
