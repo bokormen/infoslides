@@ -1,0 +1,129 @@
+html, body, div#mainContainer, div#pageContent {
+    height: 100%;
+}
+
+div.sideList {
+    width:auto;
+}
+
+div.sideList *{
+    float:left;
+    clear:both;
+    margin-top:1em;
+}
+
+div.sideList:last-child {
+    margin-bottom: 1em;
+}
+
+img.listImage{
+    width: 140px;
+    height: auto;
+}
+
+
+div#slideContent {
+    margin-top: 1em;
+    width: auto;
+    height: auto;
+}
+
+div#slideContent ul{
+    display: inline-block;
+    min-height: 4em;
+}
+
+.pageEditors{
+    margin-left: 1em;
+}
+
+#pageContent {
+    padding-top: 1em;
+}
+
+#pageContent .row{
+    overflow: hidden;
+}
+
+.btn-file {
+    float:left;
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#slideSelectTagsFrom, #slideSelectTagsTo {
+    float: left;
+    max-width: 40%;
+}
+#slideSelectTagsButtons{
+    float: left;
+    vertical-align: middle;
+    margin: 1em;
+    height: 4em;
+}
+
+#slideSelectTagsButtons button{
+    float:left;
+    clear:left;
+    margin: .3em;
+}
+
+#slideImagePreview {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+    margin: 1em;
+    float:left;
+}
+
+#slideImageError {
+    float:left;
+    width: 200px;
+    max-width: 100%;
+    margin: 1em;
+}
+
+div.buttonContainer button{
+    float:right;
+    margin:3px;
+}
+
+textarea.form-control {
+    max-width: 100%;
+}
+
+.inputShort {
+    width: 300px;
+    max-width: 100%;
+}
+
+.input-group{
+    padding: .5em;
+}
+
+.date input[readonly]{
+    cursor: pointer !important;
+}
+
+.floatContainer {
+    overflow: hidden;
+}
+
+.btnRight{
+    float:right;
+}
