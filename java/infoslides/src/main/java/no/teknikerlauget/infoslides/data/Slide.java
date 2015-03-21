@@ -13,15 +13,15 @@ public class Slide {
 	private final String text;
 	private final String picture;
 	private final Theme theme;
-	private final List<Tag> tags;
+	private final List<Integer> tagIdList;
 
-	public Slide(int id, String title, String text, String picture, Theme theme, List<Tag> tags) {
+	public Slide(int id, String title, String text, String picture, Theme theme, List<Integer> tagIdList) {
 		this.id = id;
 		this.title = title;
 		this.text = text;
 		this.picture = picture;
 		this.theme = theme;
-		this.tags = tags;
+		this.tagIdList = tagIdList;
 	}
 
 	public int getId() {
@@ -44,8 +44,8 @@ public class Slide {
 		return theme;
 	}
 
-	public List<Tag> getTags() {
-		return tags;
+	public List<Integer> getTagIdList() {
+		return tagIdList;
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class Slide {
 				", text='" + text + '\'' +
 				", picture='" + picture + '\'' +
 				", theme=" + theme.getName() +
-				", tags=" + tags +
+				", tags=" + tagIdList +
 				'}';
 	}
 
@@ -69,8 +69,8 @@ public class Slide {
 		object.put("theme", theme.toJson());
 		// Add tags
 		JSONArray jsonArray = new JSONArray();
-		for (Tag tag : tags) {
-			jsonArray.add(tag.getTag());
+		for (Integer tag : tagIdList) {
+			jsonArray.add(tag);
 		}
 		object.put("tags", jsonArray);
 		return object;
@@ -83,7 +83,11 @@ public class Slide {
 		String picture = json.get("picture").toString();
 		Theme theme = Theme.fromJson((JSONObject) json.get("theme"));
 		JSONArray tagArray = (JSONArray) (json.get("tags"));
-		ArrayList tags = new ArrayList(tagArray);
+		ArrayList<Integer> tags = new ArrayList<>();
+		for (Object tag : tagArray) {
+			int tagId = Integer.parseInt((String) tag);
+			tags.add(tagId);
+		}
 		return new Slide(id, title, text, picture, theme, tags);
 	}
 }
