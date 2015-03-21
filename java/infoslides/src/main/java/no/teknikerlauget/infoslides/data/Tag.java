@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Tag {
 
+	private final int id;
 	private final String tag;
 	private final boolean overrideOtherTags;
 	private final String startDate;
@@ -14,13 +15,18 @@ public class Tag {
 	private final List<Day> days;
 	private final String repeat;
 
-	public Tag(String tag, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
+	public Tag(int id, String tag, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
+		this.id = id;
 		this.tag = tag;
 		this.overrideOtherTags = overrideOtherTags;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.days = days;
 		this.repeat = repeat;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getTag() {
@@ -50,10 +56,11 @@ public class Tag {
 	@Override
 	public String toString() {
 		return "Tag{" +
-				"tag='" + tag + '\'' +
+				"id=" + id +
+				", tag='" + tag + '\'' +
 				", overrideOtherTags=" + overrideOtherTags +
-				", startDate=" + startDate +
-				", endDate=" + endDate +
+				", startDate='" + startDate + '\'' +
+				", endDate='" + endDate + '\'' +
 				", days=" + days +
 				", repeat='" + repeat + '\'' +
 				'}';
@@ -67,6 +74,7 @@ public class Tag {
 	public JSONObject toJson() {
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
+		object.put("id", id);
 		object.put("tag", tag);
 		object.put("overrideOtherTags", overrideOtherTags);
 		object.put("startDate", startDate);
@@ -84,12 +92,13 @@ public class Tag {
 	}
 
 	public static Tag fromJson(JSONObject json) {
+		int id = Integer.parseInt(json.get("id").toString());
 		String tag = json.get("tag").toString();
 		boolean overrideOtherTags = Boolean.parseBoolean(json.get("overrideOtherTags").toString());
 		String startDate = json.get("startDate").toString();
 		String endDate = json.get("endDate").toString();
 		String repeat = json.get("repeat").toString();
 		List<Day> days = null; // TODO
-		return new Tag(tag, overrideOtherTags, startDate, endDate, days, repeat);
+		return new Tag(id, tag, overrideOtherTags, startDate, endDate, days, repeat);
 	}
 }
