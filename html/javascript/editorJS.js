@@ -9,12 +9,11 @@ $(document).ready(function(){
     var slides      = [];
     var tags        = [];
     var curSlide    = 0;
-    var themeCSS    = CodeMirror.fromTextArea(document.getElementById('themeCSS'), {lineNumbers: true});
     var socketUrl   = 'localhost';
     //var socket = new WebSocket(socketUrl);
 
     themeCSS.getInputField().setAttribute('id', 'themeCssEditor');
-    $('#mainNav').children().eq(curView).addClass('active');
+    $('#mainNav').children().eq(curView).show();
     changeView();
     $('#slideImageError').hide();
     $('#slideImagePreview').hide();
