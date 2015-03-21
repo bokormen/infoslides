@@ -1,6 +1,7 @@
 package no.teknikerlauget.infoslides.data;
 
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +9,16 @@ import java.util.List;
 public class Tag {
 
 	private final int id;
-	private final String tag;
+	private final String name;
 	private final boolean overrideOtherTags;
 	private final String startDate;
 	private final String endDate;
 	private final List<Day> days;
 	private final String repeat;
 
-	public Tag(int id, String tag, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
+	public Tag(int id, String name, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
 		this.id = id;
-		this.tag = tag;
+		this.name = name;
 		this.overrideOtherTags = overrideOtherTags;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -29,8 +30,8 @@ public class Tag {
 		return id;
 	}
 
-	public String getTag() {
-		return tag;
+	public String getName() {
+		return name;
 	}
 
 	public boolean isOverrideOtherTags() {
@@ -54,10 +55,63 @@ public class Tag {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		System.out.println(this.toString());
+		System.out.println(o);
+
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Tag tag = (Tag) o;
+
+		if (id != tag.id) {
+			return false;
+		}
+		if (overrideOtherTags != tag.overrideOtherTags) {
+			return false;
+		}
+		if (!days.equals(tag.days)) {
+			return false;
+		}
+		if (!endDate.equals(tag.endDate)) {
+			return false;
+		}
+		if (!name.equals(tag.name)) {
+			return false;
+		}
+		if (!repeat.equals(tag.repeat)) {
+			return false;
+		}
+		if (!startDate.equals(tag.startDate)) {
+			return false;
+		}
+
+
+		System.out.println("TRUE");
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + (overrideOtherTags ? 1 : 0);
+		result = 31 * result + startDate.hashCode();
+		result = 31 * result + endDate.hashCode();
+		result = 31 * result + days.hashCode();
+		result = 31 * result + repeat.hashCode();
+		return result;
+	}
+
+	@Override
 	public String toString() {
 		return "Tag{" +
 				"id=" + id +
-				", tag='" + tag + '\'' +
+				", name='" + name + '\'' +
 				", overrideOtherTags=" + overrideOtherTags +
 				", startDate='" + startDate + '\'' +
 				", endDate='" + endDate + '\'' +
@@ -75,16 +129,16 @@ public class Tag {
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
 		object.put("id", id);
-		object.put("tag", tag);
+		object.put("name", name);
 		object.put("overrideOtherTags", overrideOtherTags);
 		object.put("startDate", startDate);
 		object.put("endDate", endDate);
 		object.put("repeat", repeat);
 
 		// Add the list of days
-		List<JSONObject> jsonDays = new ArrayList<>();
+		List<Day> jsonDays = new ArrayList<>();
 		for (Day day : days) {
-			jsonDays.add(day.toJson());
+			jsonDays.add(day);
 		}
 		object.put("days", jsonDays);
 
@@ -93,12 +147,19 @@ public class Tag {
 
 	public static Tag fromJson(JSONObject json) {
 		int id = Integer.parseInt(json.get("id").toString());
-		String tag = json.get("tag").toString();
+		String tag = json.get("name").toString();
 		boolean overrideOtherTags = Boolean.parseBoolean(json.get("overrideOtherTags").toString());
 		String startDate = json.get("startDate").toString();
 		String endDate = json.get("endDate").toString();
 		String repeat = json.get("repeat").toString();
-		List<Day> days = null; // TODO
+
+		JSONArray dayList = (JSONArray) json.get("days");
+		List<Day> days = new ArrayList<>();
+		for (int i = 0; i < dayList.length(); i++) {
+			JSONObject day = dayList.getJSONObject(i);
+			days.add(new Day(day.getInt("id"), day.getInt("day"), day.getString("startTime"), day.getString("endTime")));
+		}
+
 		return new Tag(id, tag, overrideOtherTags, startDate, endDate, days, repeat);
 	}
 }

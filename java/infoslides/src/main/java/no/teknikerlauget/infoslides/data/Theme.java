@@ -1,6 +1,6 @@
 package no.teknikerlauget.infoslides.data;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class Theme {
 
@@ -24,6 +24,38 @@ public class Theme {
 
 	public String getDescription() {
 		return description;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Theme theme = (Theme) o;
+
+		if (css != null ? !css.equals(theme.css) : theme.css != null) {
+			return false;
+		}
+		if (description != null ? !description.equals(theme.description) : theme.description != null) {
+			return false;
+		}
+		if (name != null ? !name.equals(theme.name) : theme.name != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (css != null ? css.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		return result;
 	}
 
 	@Override
