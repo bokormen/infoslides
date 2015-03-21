@@ -11,6 +11,11 @@ import java.util.Random;
 
 public class TestSlide {
 
+	// TEMP
+	public static void main(String[] args) {
+		System.out.println(new TestSlide().getSlide().toJson().toString(2));
+	}
+
 	private final Slide slide;
 	private final Random random;
 
