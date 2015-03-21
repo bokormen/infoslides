@@ -15,16 +15,22 @@ $(document).ready(function(){
     var socketUrl   = 'localhost';
     var calFrom     = new dhtmlXCalendarObject("tagDateFrom", false);
     var calTo       = new dhtmlxCalendarObject("tagDateTo", false);
+    var emptySlide  = {
+        'type': 'slide',
+        'title': '',
+        'text': '',
+        'picture': '',
+        'tags': [],
+        'theme': 0
+    };
     //var socket = new WebSocket(socketUrl);
 
     calFrom.setSensitiveRange(null, calTo.getDate());
     calTo.setSensitiveRange(calFrom.getDate(), null);
-
     calFrom.attachEvent('onClick', function(date){
         calTo.clearSensitiveRange();
         calTo.setSensitiveRange(date, null);
     });
-
     calTo.attachEvent('onClick', function(date){
         calFrom.clearSensitiveRange();
         calFrom.setSensitiveRange(null, date);
@@ -35,6 +41,7 @@ $(document).ready(function(){
     $('div#pageContent-' + curView).show();
     $('#slideImageError').hide();
     $('#slideImagePreview').hide();
+    $('#addSlide').removeAttr('disabled');
 
 
     $('#mainNav').children().each(function (i){
@@ -50,26 +57,34 @@ $(document).ready(function(){
         });
     });
 
-
-    $('#slideAdd').on('click', function () {
-        var jsonText = '{ "type": "addSlide"}';
-        getSlideList();
+    $('#addSlide').on('click', function () {
+        var slide = {'type': slide,
+            'id': -1,
+            'title': getTranslation('new slide'),
+            'text': '',
+            'picture': '',
+            'theme': 0,
+            'tags': []
+        };
+        slides.push(slide);
+        updateSlideList();
+        $('#addSlide').attr('disabled', 'disabled');
     });
 
     $('#slideDelete').on('click', function(){
         var jsonText = '{ "type": "removeSlide", "id": "' + curSlide + '" }';
-        var json = JSON.parse(jsonText);
         //socket.send(json);
     });
 
     $('#slideSubmit').on('click', function(){
-        var jsonText = '{ "type": "slide",' +
-            '"id": "' + curSlide + '",' +
-            '"title": "' + $('#slideName').val() + '",' +
-            '"text": "' + getTextWithBreaks() + '", ' +
-            '"picture": "' + $('img#slideImagePreview').attr('src') + '", ' +
-            '"theme": "' + $("#slideSelectTheme").val() + '",' +
-            '"tags": ' + getTags() + '}';
+        var json = { "type": "slide",
+            "id": curSlide,
+            "title": $('#slideName').val(),
+            "text": getTextWithBreaks(),
+            "picture": $('img#slideImagePreview').attr('src'),
+            "theme": $("#slideSelectTheme").val(),
+            "tags": getTags()};
+        var jsonText = JSON.stringify(json);
         console.log(jsonText);
     });
 
@@ -88,7 +103,7 @@ $(document).ready(function(){
     function getTags(){
         var tags = "[";
         $('#slideSelectTagsTo').children().each(function(){
-            if(!$(this).attr('disabled')) tags += '"' + this.value + '",';
+            if(!$(this).attr('disabled')) tags += '"' + $(this).attr('data-id') + '",';
         });
         tags = tags.substr(0, tags.length - 1);
         tags += "]";
@@ -131,19 +146,22 @@ $(document).ready(function(){
         $('#slideSelectTagsFrom').html("");
         $('#slideSelectTagsTo').html("");
         $(tags).each(function () {
-            if(selectedTags.contains(this))$('#slideSelectTagsTo').append('<option value="' + this + '">' + this + '</option>');
-            else $('#slideSelectTagsFrom').append('<option value="' + this + '">' + this + '</option>');
+            if(selectedTags.contains(this.id))$('#slideSelectTagsTo').append('<ul data-id="' + this.id + '">' + this.name + '</li>');
+            else $('#slideSelectTagsFrom').append('<li data-id="' + this.id + '">' + this.name + '</option>');
         });
     }
 
     function loadSlide(id){
-        if(id > slides.length - 1) return;
+        var slide;
+        $(slides).each(function () {
+            if(this.id == id) slide = this;
+        });
+        if(slide == null) return;
         curSlide = id;
-        var slide = slides[id];
 
         $('#slideTitle').val(slide.title);
         $('#slideText').val(getTextWithLineBreaks(slide.text));
-        if(obj.image != "") {
+        if(slide.picture != "") {
             $('#slideImagePreview').attr('src', slide.image);
             $('#slideImagePreview').show();
             $('#slideImageError').hide();
@@ -153,20 +171,32 @@ $(document).ready(function(){
             $('#slideImagePreview').hide();
             $('#slideImageError').hide();
         }
-        updateSlideTags(obj.tags);
+        updateSlideTags(slide.tags);
         $('#slideSelectTheme').select(slide.theme);
     }
 
-    function getSlideList(jsonText){
-        var obj = JSON.parse(jsonText);
-        slides = obj.slides;
-        $('#slideList').html("");
+    function getSlideList(json){
+        slides = json.slides;
+        updateSlideList();
+        $('#addSlide').removeAttr('disabled');
+    }
+
+    function updateSlideList(){
+        $('#slideList').find('ul').first().html("");
         $(slides).each(function () {
-            var opt = '<option value="' + this.id + '">'+
-                    '<img src="' + this.image + '" class="listImage img-thumbnail" />' +
-                    this.title +
-                    '</option>';
+            var opt = '<li class="list-group-item" data-id="' + this.id + '">' + this.title + '</li>';
             $('#slideList').find('ul').first().append(opt);
+        });
+        addSlideListListener();
+    }
+
+    function addSlideListListener(){
+        $('#slideList').find('ul').first().children().each(function(){
+            $(this).on('click', function () {
+                $('#slideList').find('ul').first().children().removeClass('active');
+                loadSlide($(this).attr('data-id'));
+                $(this).addClass('active');
+            });
         });
     }
 
@@ -187,25 +217,40 @@ $(document).ready(function(){
     }
 
     function updateDayList(){
+        var tag;
+        tags.forEach(function(entry){
+            if(entry.id = curTag) tag = entry;
+        });
         $('#dayList').html('<li class="list-group-item list-group-item-info floatContainer"><strong>' + getTranslation('days') + '</strong><button type="button" class="btn btn-default btnRight" data-toggle="modal" data-target="#addDayModal">' + getTranslation('add day') + '</button></li>');
-        tags[curTag].days.forEach(function(entry){
-            $('#dayList').append('<li class="list-group-item">' + getTranslation(days[entry.day]) + ' | ' + entry.startTime + ' - ' + entry.endTime + '</li>');
+        var i = 0;
+        tag.days.forEach(function(entry){
+            $('#dayList').append('<li class="list-group-item floatContainer" id="tagDayList-' + i + '">' + getTranslation(days[entry.day]) + ' | ' + entry.startTime + ' - ' + entry.endTime + '<button type="button" class="btn btn-default btnRight removeDay">&times;</button></li>');
+        });
+        $('.removeDay').on('click', function () {
+            var id = $(this).parent().attr('id').split('-')[-1];
+            tag.days.splice(id, 1);
+            updateDayList();
         });
     }
 
     $('.daysModalClose').on('click', function () {
         clearDaysModal();
     });
+
     $('#daysModalAdd').on('click', function () {
+        var tag;
+        tags.forEach(function(entry){
+            if(entry.id = curTag) tag = entry;
+        });
         var add = true;
-        if(tags[curTag] == null || tags[curTag] == undefined) tags[curTag] = {};
-        if(tags[curTag].days == null || tags[curTag].days == undefined) tags[curTag].days = [];
+        if(tag == null || tag == undefined) tag = {};
+        if(tag.days == null || tag.days == undefined) tag.days = [];
         var day = createDay($('#days').val(), $("#hoursFrom").val(), $('#minsFrom').val(), $('#hoursTo').val(), $('#minsTo').val());
-        tags[curTag].days.forEach(function(entry){
+        tag.days.forEach(function(entry){
             if(entry.startTime == day.startTime && entry.endTime == day.endTime && entry.day == day.day) add = false;
         });
         if(Date.parse('01/01/2000 ' + day.startTime) > Date.parse('01/01/2000 ' + day.endTime)) add = false;
-        if(add) tags[curTag].days.push(day);
+        if(add) tag.days.push(day);
         updateDayList();
         $('#addDayModal').modal('hide');
         clearDaysModal();
