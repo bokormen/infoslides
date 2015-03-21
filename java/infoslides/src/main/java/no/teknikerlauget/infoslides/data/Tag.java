@@ -56,9 +56,6 @@ public class Tag {
 
 	@Override
 	public boolean equals(Object o) {
-		System.out.println(this.toString());
-		System.out.println(o);
-
 		if (this == o) {
 			return true;
 		}
@@ -90,8 +87,6 @@ public class Tag {
 			return false;
 		}
 
-
-		System.out.println("TRUE");
 		return true;
 	}
 
