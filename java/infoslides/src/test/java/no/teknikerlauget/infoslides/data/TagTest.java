@@ -27,7 +27,7 @@ public class TagTest {
 
 	@Test
 	public void testFromJson() throws Exception {
-		JSONObject jsonObject = new JSONObject("{\"endDate\":\"2015-03-29\",\"repeat\":\"weekly\",\"name\":\"LM\",\"days\":[{\"startTime\":\"18:00\",\"id\":0,\"endTime\":\"23:00\",\"day\":5}],\"id\":0,\"overrideOtherTags\":false,\"startDate\":\"2015-03-21\"}");
+		JSONObject jsonObject = new JSONObject("{\"endDate\":\"2015-03-29\",\"repeat\":\"WEEKLY\",\"name\":\"LM\",\"days\":[{\"startTime\":\"18:00\",\"id\":0,\"endTime\":\"23:00\",\"day\":5}],\"id\":0,\"overrideOtherTags\":false,\"startDate\":\"2015-03-21\"}");
 		assertEquals(Tag.fromJson(jsonObject), tag);
 	}
 }
