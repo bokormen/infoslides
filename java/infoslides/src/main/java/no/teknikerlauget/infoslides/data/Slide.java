@@ -106,6 +106,7 @@ public class Slide {
 
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
+		object.put("type", "Slide");
 		object.put("id", id);
 		object.put("title", title);
 		object.put("text", text);

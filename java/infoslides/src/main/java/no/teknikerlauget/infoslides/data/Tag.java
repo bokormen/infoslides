@@ -128,6 +128,7 @@ public class Tag {
 	public JSONObject toJson() {
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
+		object.put("type", "Tag");
 		object.put("id", id);
 		object.put("name", name);
 		object.put("overrideOtherTags", overrideOtherTags);
