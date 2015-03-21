@@ -4,19 +4,39 @@
 
 $(document).ready(function(){
     var curView     = 0;
-    if(window.sessionStorage.getItem('curView') !== undefined) curView = window.sessionStorage.getItem('curView');
+    var sessionCurView = window.sessionStorage.getItem('curView');
+    if(sessionCurView !== undefined && sessionCurView !== null) curView = window.sessionStorage.getItem('curView');
     else window.sessionStorage.setItem('curView', 0);
     var slides      = [];
     var tags        = [];
     var curSlide    = 0;
+    var curTag      = 0;
+    var days        = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
     var socketUrl   = 'localhost';
+    var calFrom     = new dhtmlXCalendarObject("tagDateFrom", false);
+    var calTo       = new dhtmlxCalendarObject("tagDateTo", false);
     //var socket = new WebSocket(socketUrl);
 
-    themeCSS.getInputField().setAttribute('id', 'themeCssEditor');
-    $('#mainNav').children().eq(curView).show();
-    changeView();
+    calFrom.setSensitiveRange(null, calTo.getDate());
+    calTo.setSensitiveRange(calFrom.getDate(), null);
+
+    calFrom.attachEvent('onClick', function(date){
+        calTo.clearSensitiveRange();
+        calTo.setSensitiveRange(date, null);
+    });
+
+    calTo.attachEvent('onClick', function(date){
+        calFrom.clearSensitiveRange();
+        calFrom.setSensitiveRange(null, date);
+    });
+
+    $('#mainNav').children().eq(curView).addClass('active');
+    $('#pageContent').children().hide();
+    $('div#pageContent-' + curView).show();
     $('#slideImageError').hide();
     $('#slideImagePreview').hide();
+
+
     $('#mainNav').children().each(function (i){
         $(this).on('click', function (){
             if(i == curView) return;
@@ -26,12 +46,8 @@ $(document).ready(function(){
             $('#mainNav').children().eq(i).addClass("active");
             curView = i;
             window.sessionStorage.setItem('curView', i);
-            changeView();
+            changeView(i);
         });
-    });
-
-    $('.form-datetime').datetimepicker({
-        format: "dd-mm-yyyy hh-ii"
     });
 
 
@@ -154,10 +170,44 @@ $(document).ready(function(){
         });
     }
 
-    function changeView(){
+    function changeView(i){
         $('#pageContent').children().hide();
-        $('#pageContent-' + curView).show();
+        $('#pageContent-' + i).show();
     }
-});
 
-$(document).on('refresh')
+    function clearDaysModal(){
+        $('#addDayModal').find('select').each(function(){
+            $(this).children().removeAttr('selected');
+            $(this).children().find('option').eq(0).attr('selected', 'selected');
+        });
+    }
+
+    function createDay(day, startHour, startMins, endHour, endMins){
+        return {'day': day, 'startTime':startHour + ":" + startMins, 'endTime':endHour + ":" + endMins};
+    }
+
+    function updateDayList(){
+        $('#dayList').html('<li class="list-group-item list-group-item-info floatContainer"><strong>' + getTranslation('days') + '</strong><button type="button" class="btn btn-default btnRight" data-toggle="modal" data-target="#addDayModal">' + getTranslation('add day') + '</button></li>');
+        tags[curTag].days.forEach(function(entry){
+            $('#dayList').append('<li class="list-group-item">' + getTranslation(days[entry.day]) + ' | ' + entry.startTime + ' - ' + entry.endTime + '</li>');
+        });
+    }
+
+    $('.daysModalClose').on('click', function () {
+        clearDaysModal();
+    });
+    $('#daysModalAdd').on('click', function () {
+        var add = true;
+        if(tags[curTag] == null || tags[curTag] == undefined) tags[curTag] = {};
+        if(tags[curTag].days == null || tags[curTag].days == undefined) tags[curTag].days = [];
+        var day = createDay($('#days').val(), $("#hoursFrom").val(), $('#minsFrom').val(), $('#hoursTo').val(), $('#minsTo').val());
+        tags[curTag].days.forEach(function(entry){
+            if(entry.startTime == day.startTime && entry.endTime == day.endTime && entry.day == day.day) add = false;
+        });
+        if(Date.parse('01/01/2000 ' + day.startTime) > Date.parse('01/01/2000 ' + day.endTime)) add = false;
+        if(add) tags[curTag].days.push(day);
+        updateDayList();
+        $('#addDayModal').modal('hide');
+        clearDaysModal();
+    });
+});

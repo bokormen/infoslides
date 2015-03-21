@@ -26,7 +26,20 @@ var indices = [
     'yes',
     'theme name',
     'css',
-    'theme description'
+    'theme description',
+    'add day',
+    'day',
+    'days',
+    'time',
+    'close',
+    'add',
+    'mon',
+    'tue',
+    'wed',
+    'thu',
+    'fri',
+    'sat',
+    'sun'
 ];
 
 var nb_NO = [
@@ -57,7 +70,20 @@ var nb_NO = [
     'Ja',
     'Temanavn',
     'CSS',
-    'Beskrivelse av Tema'
+    'Beskrivelse av Tema',
+    'Legg til Dag',
+    'Dag',
+    'Dager',
+    'Tid',
+    'Lukk',
+    'Legg til',
+    'Mandag',
+    'Tirsdag',
+    'Onsdag',
+    'Torsdag',
+    'Fredag',
+    'Lørdag',
+    'Søndag'
 ];
 
 var en_US = [
@@ -88,7 +114,20 @@ var en_US = [
     'Yes',
     'Theme Name',
     'CSS',
-    'Theme Description'
+    'Theme Description',
+    'Add Day',
+    'Day',
+    'Days',
+    'Time',
+    'Close',
+    'Add',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
 ];
 
 var lang = [];

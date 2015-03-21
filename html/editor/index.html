@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/bootstrap-theme.min.css" />
     <link rel="stylesheet" href="../css/editor-style.css" />
-    <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="../css/dhtmlxcalendar.css" />
     <script src="../javascript/languages.js"></script>
     <script src="../javascript/jQuery.js"></script>
     <script src="../javascript/bootstrap.min.js"></script>
-    <script src="../javascript/bootstrap-datetimepicker.min.js"></script>
     <script src="../javascript/editorJS.js"></script>
+    <script src="../javascript/dhtmlxcalendar.js"></script>
     <script>
         lang = nb_NO;
     </script>
@@ -139,16 +139,17 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"><label><script>print('date time');</script></label></div>
                             <div class="panel-body">
-                                <div class="input-group date form-datetime">
+                                <div class="input-group date">
                                     <div class="input-group-addon"><label for="tagDateFrom"><script>print('from');</script></label></div>
                                     <input type="text" id="tagDateFrom" class="form-control" readonly />
-                                    <div class="input-group-addon"><i class="glyphicon glyphicon-th"></i></div>
                                 </div>
-                                <div class="input-group date form-datetime">
+                                <div class="input-group date">
                                     <div class="input-group-addon"><label for="tagDateTo"><script>print('to');</script></label></div>
                                     <input type="text" id="tagDateTo" class="form-control" readonly />
-                                    <div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div>
                                 </div>
+                                <ul class="list-group" id="dayList">
+                                    <li class="list-group-item list-group-item-info floatContainer"><strong><script>print('days');</script></strong><button type="button" class="btn btn-default btnRight" data-toggle="modal" data-target="#addDayModal"><script>print('add day');</script></button></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -215,6 +216,94 @@
                         <button type="button" class="btn btn-default" id="themeDelete"><script>print('delete');</script></button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addDayModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close daysModalClose" type="button" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"><script>print('add day');</script></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-lg-1"><label for="days"><script>print('day');</script>:</label></div>
+                            <div class="col-lg-11">
+                                <select class="form-control" id="days">
+                                    <option value="0"><script>print('mon');</script></option>
+                                    <option value="1"><script>print('tue');</script></option>
+                                    <option value="2"><script>print('wed');</script></option>
+                                    <option value="3"><script>print('thu');</script></option>
+                                    <option value="4"><script>print('fri');</script></option>
+                                    <option value="5"><script>print('sat');</script></option>
+                                    <option value="6"><script>print('sun');</script></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"><h4><script>print('time')</script></h4></div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-lg-1"><label for="hoursFrom"><script>print('from')</script>:</label></div>
+                            <div class="col-lg-5">
+                                <select id="hoursFrom" class="form-control">
+                                    <script>
+                                        for(var i = 0; i < 24; i++){
+                                            var num = ('0' + i).slice(-2);
+                                            document.write('<option value="' + num + '">' + num + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                            </div>
+                            <div class="col-sm-1">:</div>
+                            <div class="col-lg-5">
+                                <select class="form-control" id="minsFrom">
+                                    <script>
+                                        for(var i = 0; i < 60; i++){
+                                            var num = ('0' + i).slice(-2)
+                                            document.write('<option value="' + num + '">' + num + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-lg-1"><label for="hoursTo"><script>print('to')</script>:</label></div>
+                            <div class="col-lg-5">
+                                <select id="hoursTo" class="form-control">
+                                    <script>
+                                        for(var i = 0; i < 24; i++){
+                                            var num =('0' + i).slice(-2)
+                                            document.write('<option value="' + num + '">' + num + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                            </div>
+                            <div class="col-sm-1">:</div>
+                            <div class="col-lg-5">
+                                <select class="form-control" id="minsTo">
+                                    <script>
+                                        for(var i = 0; i < 60; i++){
+                                            var num = ('0' + i).slice(-2)
+                                            document.write('<option value="' + num + '">' + num + '</option>');
+                                        }
+                                    </script>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default daysModalClose" data-dismiss="modal"><script>print('close');</script></button>
+                <button type="button" class="btn btn-primary" id="daysModalAdd"><script>print('add');</script></button>
             </div>
         </div>
     </div>

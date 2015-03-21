@@ -115,3 +115,15 @@ textarea.form-control {
 .input-group{
     padding: .5em;
 }
+
+.date input[readonly]{
+    cursor: pointer !important;
+}
+
+.floatContainer {
+    overflow: hidden;
+}
+
+.btnRight{
+    float:right;
+}
