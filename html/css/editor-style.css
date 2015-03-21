@@ -2,17 +2,17 @@ html, body, div#mainContainer, div#pageContent {
     height: 100%;
 }
 
-div#slideList {
+div.sideList {
     width:auto;
 }
 
-div#slideList *{
+div.sideList *{
     float:left;
     clear:both;
     margin-top:1em;
 }
 
-div#slideList:last-child {
+div.sideList:last-child {
     margin-bottom: 1em;
 }
 
@@ -20,6 +20,7 @@ img.listImage{
     width: 140px;
     height: auto;
 }
+
 
 div#slideContent {
     margin-top: 1em;
@@ -32,15 +33,22 @@ div#slideContent ul{
     min-height: 4em;
 }
 
+.pageEditors{
+    margin-left: 1em;
+}
+
+#pageContent {
+    padding-top: 1em;
+}
+
 #pageContent .row{
-    padding: 1em;
+    overflow: hidden;
 }
 
 .btn-file {
     float:left;
     position: relative;
     overflow: hidden;
-    margin: 1em;
 }
 .btn-file input[type=file] {
     position: absolute;
@@ -88,4 +96,26 @@ div#slideContent ul{
     width: 200px;
     max-width: 100%;
     margin: 1em;
+}
+
+div.buttonContainer button{
+    float:right;
+    margin:3px;
+}
+
+textarea.form-control {
+    max-width: 100%;
+}
+
+.inputShort {
+    width: 300px;
+    max-width: 100%;
+}
+
+.input-group{
+    padding: .5em;
+}
+
+.CodeMirror{
+    border: 1px solid #DDD;
 }
