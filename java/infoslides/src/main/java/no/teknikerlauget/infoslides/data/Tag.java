@@ -14,9 +14,9 @@ public class Tag {
 	private final String startDate;
 	private final String endDate;
 	private final List<Day> days;
-	private final String repeat;
+	private final Repeat repeat;
 
-	public Tag(int id, String name, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
+	public Tag(int id, String name, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, Repeat repeat) {
 		this.id = id;
 		this.name = name;
 		this.overrideOtherTags = overrideOtherTags;
@@ -50,15 +50,12 @@ public class Tag {
 		return days;
 	}
 
-	public String getRepeat() {
+	public Repeat getRepeat() {
 		return repeat;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		System.out.println(this.toString());
-		System.out.println(o);
-
 		if (this == o) {
 			return true;
 		}
@@ -90,8 +87,6 @@ public class Tag {
 			return false;
 		}
 
-
-		System.out.println("TRUE");
 		return true;
 	}
 
@@ -128,12 +123,13 @@ public class Tag {
 	public JSONObject toJson() {
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
+		object.put("type", "Tag");
 		object.put("id", id);
 		object.put("name", name);
 		object.put("overrideOtherTags", overrideOtherTags);
 		object.put("startDate", startDate);
 		object.put("endDate", endDate);
-		object.put("repeat", repeat);
+		object.put("repeat", repeat.name());
 
 		// Add the list of days
 		List<Day> jsonDays = new ArrayList<>();
@@ -151,7 +147,7 @@ public class Tag {
 		boolean overrideOtherTags = Boolean.parseBoolean(json.get("overrideOtherTags").toString());
 		String startDate = json.get("startDate").toString();
 		String endDate = json.get("endDate").toString();
-		String repeat = json.get("repeat").toString();
+		Repeat repeat = Repeat.getFromString(json.getString("repeat"));
 
 		JSONArray dayList = (JSONArray) json.get("days");
 		List<Day> days = new ArrayList<>();

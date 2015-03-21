@@ -69,6 +69,7 @@ public class Theme {
 
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
+		object.put("type", "Theme");
 		object.put("name", name);
 		object.put("css", css);
 		object.put("description", description);

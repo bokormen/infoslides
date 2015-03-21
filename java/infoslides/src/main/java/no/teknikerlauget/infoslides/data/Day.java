@@ -80,7 +80,7 @@ public class Day {
 
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
-		// TODO class name in all classes
+		object.put("type", "Day");
 		object.put("id", id);
 		object.put("day", day);
 		object.put("startTime", startTime);
