@@ -8,16 +8,16 @@ import java.util.List;
 public class Tag {
 
 	private final int id;
-	private final String tag;
+	private final String name;
 	private final boolean overrideOtherTags;
 	private final String startDate;
 	private final String endDate;
 	private final List<Day> days;
 	private final String repeat;
 
-	public Tag(int id, String tag, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
+	public Tag(int id, String name, boolean overrideOtherTags, String startDate, String endDate, List<Day> days, String repeat) {
 		this.id = id;
-		this.tag = tag;
+		this.name = name;
 		this.overrideOtherTags = overrideOtherTags;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -29,8 +29,8 @@ public class Tag {
 		return id;
 	}
 
-	public String getTag() {
-		return tag;
+	public String getName() {
+		return name;
 	}
 
 	public boolean isOverrideOtherTags() {
@@ -57,7 +57,7 @@ public class Tag {
 	public String toString() {
 		return "Tag{" +
 				"id=" + id +
-				", tag='" + tag + '\'' +
+				", name='" + name + '\'' +
 				", overrideOtherTags=" + overrideOtherTags +
 				", startDate='" + startDate + '\'' +
 				", endDate='" + endDate + '\'' +
@@ -75,7 +75,7 @@ public class Tag {
 		// Create JSON object and add data
 		JSONObject object = new JSONObject();
 		object.put("id", id);
-		object.put("tag", tag);
+		object.put("name", name);
 		object.put("overrideOtherTags", overrideOtherTags);
 		object.put("startDate", startDate);
 		object.put("endDate", endDate);
@@ -93,7 +93,7 @@ public class Tag {
 
 	public static Tag fromJson(JSONObject json) {
 		int id = Integer.parseInt(json.get("id").toString());
-		String tag = json.get("tag").toString();
+		String tag = json.get("name").toString();
 		boolean overrideOtherTags = Boolean.parseBoolean(json.get("overrideOtherTags").toString());
 		String startDate = json.get("startDate").toString();
 		String endDate = json.get("endDate").toString();
