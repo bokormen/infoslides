@@ -1,4 +1,5 @@
 infoslides
 ==========
 
-This project aims to create a solution for the info slides presented in html format, with a java server which pushes slides to multiple monitors so all monitors display the same slide at any time
+This project aims to create an infoslide solution, where the sides will be presented in HTML format. A Java server pushes the slides to multiple monitors, so all the monitors display the same slide at all times. 
+
