@@ -3,16 +3,37 @@
  */
 
 $(document).ready(function(){
-    $('#slideContent').removeClass('hidden');
-    $('#showSlides').addClass('active');
-    $('#slideImageError').hide();
-    $('#slideImagePreview').hide();
-
+    var curView     = 0;
+    if(window.sessionStorage.getItem('curView') !== undefined) curView = window.sessionStorage.getItem('curView');
+    else window.sessionStorage.setItem('curView', 0);
     var slides      = [];
     var tags        = [];
     var curSlide    = 0;
+    var themeCSS    = CodeMirror.fromTextArea(document.getElementById('themeCSS'), {lineNumbers: true});
     var socketUrl   = 'localhost';
     //var socket = new WebSocket(socketUrl);
+
+    themeCSS.getInputField().setAttribute('id', 'themeCssEditor');
+    $('#mainNav').children().eq(curView).addClass('active');
+    changeView();
+    $('#slideImageError').hide();
+    $('#slideImagePreview').hide();
+    $('#mainNav').children().each(function (i){
+        $(this).on('click', function (){
+            if(i == curView) return;
+            $('#mainNav').children().each(function () {
+                if($(this).hasClass("active")) $(this).removeClass("active");
+            });
+            $('#mainNav').children().eq(i).addClass("active");
+            curView = i;
+            window.sessionStorage.setItem('curView', i);
+            changeView();
+        });
+    });
+
+    $('.form-datetime').datetimepicker({
+        format: "dd-mm-yyyy hh-ii"
+    });
 
 
     $('#slideAdd').on('click', function () {
@@ -105,7 +126,7 @@ $(document).ready(function(){
         curSlide = id;
         var slide = slides[id];
 
-        $('#slideName').val(slide.title);
+        $('#slideTitle').val(slide.title);
         $('#slideText').val(getTextWithLineBreaks(slide.text));
         if(obj.image != "") {
             $('#slideImagePreview').attr('src', slide.image);
@@ -133,4 +154,11 @@ $(document).ready(function(){
             $('#slideList').find('ul').first().append(opt);
         });
     }
+
+    function changeView(){
+        $('#pageContent').children().hide();
+        $('#pageContent-' + curView).show();
+    }
 });
+
+$(document).on('refresh')

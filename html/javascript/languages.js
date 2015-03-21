@@ -2,7 +2,7 @@ var indices = [
     'slides',
     'tags',
     'themes',
-    'name',
+    'title',
     'text',
     'picture',
     'browse',
@@ -14,14 +14,26 @@ var indices = [
     'submit',
     'delete',
     'upload image',
-    'add slide'
+    'add slide',
+    'add tag',
+    'add theme',
+    'tag',
+    'date time',
+    'from',
+    'to',
+    'override other tags',
+    'no',
+    'yes',
+    'theme name',
+    'css',
+    'theme description'
 ];
 
 var nb_NO = [
     'Sider',
     'Tags',
     'Temaer',
-    'Navn',
+    'Tittel',
     'Tekst',
     'Bilde',
     'Velg Fil',
@@ -33,14 +45,26 @@ var nb_NO = [
     'Lagre',
     'Slett',
     'Velg et bilde',
-    'Legg til Side'
+    'Legg til Side',
+    'Legg til Tag',
+    'Legg til Tema',
+    'Tag',
+    'Dato / Tid',
+    'Fra',
+    'Til',
+    'Overskriv andre tags',
+    'Nei',
+    'Ja',
+    'Temanavn',
+    'CSS',
+    'Beskrivelse av Tema'
 ];
 
 var en_US = [
     'Slides',
     'Tags',
     'Themes',
-    'Navn',
+    'Title',
     'Text',
     'Picture',
     'Browse',
@@ -52,17 +76,29 @@ var en_US = [
     'Submit',
     'Delete',
     'Please upload a picture',
-    'Add Slide'
+    'Add Slide',
+    'Add Tag',
+    'Add Theme',
+    'Tag',
+    'Date / Time',
+    'From',
+    'To',
+    'Override other Tags',
+    'No',
+    'Yes',
+    'Theme Name',
+    'CSS',
+    'Theme Description'
 ];
 
 var lang = [];
 
 function print(key){
-    if(key == 'org') document.write('Salem Menighet');
-    else document.write(getTranslation(key));
+    document.write(getTranslation(key));
 }
 
 function getTranslation(key){
+    if(key == 'org') return 'Salem Menighet';
     var i = indices.indexOf(key);
     var value = lang[i];
     if(value == "" || value == undefined) value = key;

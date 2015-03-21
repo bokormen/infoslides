@@ -6,15 +6,24 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/bootstrap-theme.min.css" />
     <link rel="stylesheet" href="../css/editor-style.css" />
+    <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="../css/codemirror.css" />
+    <link rel="stylesheet" href="../css/3024-day.css" />
     <script src="../javascript/languages.js"></script>
     <script src="../javascript/jQuery.js"></script>
     <script src="../javascript/bootstrap.min.js"></script>
+    <script src="../javascript/bootstrap-datetimepicker.min.js"></script>
+    <script src="../javascript/codemirror.js"></script>
+    <script src="../javascript/css.js"></script>
     <script src="../javascript/editorJS.js"></script>
     <script>
         lang = nb_NO;
     </script>
 
     <title></title>
+    <script>
+        $('title').text("InfoSlides | " + getTranslation('org'));
+    </script>
 </head>
 <body>
 <div id="mainContainer" class="container">
@@ -23,7 +32,7 @@
     </div>
 
     <nav>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="mainNav">
             <li role="presentation" id="showSlides"><a href="#"><script>print('slides');</script></a></li>
             <li role="presentation" id="showTags"><a href="#"><script>print('tags');</script></a></li>
             <li role="presentation" id="showThemes"><a href="#"><script>print('themes');</script></a></li>
@@ -31,24 +40,28 @@
     </nav>
 
     <div id="pageContent" class="panel">
-        <div id="slideContent" class="hidden">
+        <div id="pageContent-0">
 
-            <div id="slideList" class="col-sm-1 panel panel-default">
+            <div id="slideList" class="col-sm-1 sideList panel panel-default">
                 <button type="button" class="btn btn-primary" id="addSlide"><script>print('add slide');</script></button>
                 <ul class="list-group">
                 </ul>
             </div>
 
-            <div id="slideEditor" class="pageEditors col-lg-9">
+            <div class="pageEditors col-lg-7">
                 <form>
-                    <div class="input-group row">
-                        <span class="input-group-addon"><label for="slideName"><script>print('name')</script></label></span>
-                        <input type="text" class="form-control" id="slideName" />
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="slideTitle"><script>print('title')</script></label></div>
+                            <div class="panel-body"><input type="text" class="form-control inputShort" id="slideTitle" /></div>
+                        </div>
                     </div>
 
-                    <div class="input-group row">
-                        <span class="input-group-addon"><label for="slideText"><script>print('text');</script></label></span>
-                        <textarea class="form-control" id="slideText"></textarea>
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="slideText"><script>print('text');</script></label></div>
+                            <div class="panel-body"><textarea class="form-control" id="slideText"></textarea></div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -89,22 +102,125 @@
                         </div>
                     </div>
 
-                    <div class="input-group">
-                        <div class="input-group-addon"><label for="slideSelectTheme"><script>print('theme');</script></label></div>
-                        <select class="form-control" id="slideSelectTheme">
-                            <option value="-1"><script>print('select theme');</script></option>
-                        </select>
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="slideSelectTheme"><script>print('theme');</script></label></div>
+                            <div class="panel-body">
+                                <select class="form-control inputShort" id="slideSelectTheme">
+                                    <option value="-1"><script>print('select theme');</script></option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group row">
-                        <button type="button" class="btn btn-default" id="slideDelete"><script>print('delete');</script></button>
-                        <button type="button" class="btn btn-default" id="slideCancel"><script>print('cancel');</script></button>
+                    <div class="form-group row buttonContainer">
                         <button type="button" class="btn btn-primary" id="slideSubmit"><script>print('submit');</script></button>
+                        <button type="button" class="btn btn-default" id="slideCancel"><script>print('cancel');</script></button>
+                        <button type="button" class="btn btn-default" id="slideDelete"><script>print('delete');</script></button>
                     </div>
                 </form>
             </div>
         </div>
 
+        <div id="pageContent-1">
+
+            <div id="tagList" class="col-sm-1 sideList panel panel-default">
+                <button type="button" class="btn btn-primary" id="addTag"><script>print('add tag');</script></button>
+                <ul class="list-group">
+                </ul>
+            </div>
+
+            <div class="pageEditors col-lg-7">
+                <form>
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="tagName"><script>print('tag')</script></label></div>
+                            <div class="panel-body"><input type="text" class="form-control inputShort" id="tagName" /></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label><script>print('date time');</script></label></div>
+                            <div class="panel-body">
+                                <div class="input-group date form-datetime">
+                                    <div class="input-group-addon"><label for="tagDateFrom"><script>print('from');</script></label></div>
+                                    <input type="text" id="tagDateFrom" class="form-control" readonly />
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-th"></i></div>
+                                </div>
+                                <div class="input-group date form-datetime">
+                                    <div class="input-group-addon"><label for="tagDateTo"><script>print('to');</script></label></div>
+                                    <input type="text" id="tagDateTo" class="form-control" readonly />
+                                    <div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="tagOverride"><script>print('override other tags')</script></label></div>
+                            <div class="panel-body">
+                                <select id="tagOverride" class="form-control inputShort">
+                                    <option id="0"><script>print('no');</script></option>
+                                    <option id="1"><script>print('yes');</script></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row buttonContainer">
+                        <button type="button" class="btn btn-primary" id="tagSubmit"><script>print('submit');</script></button>
+                        <button type="button" class="btn btn-default" id="tagCancel"><script>print('cancel');</script></button>
+                        <button type="button" class="btn btn-default" id="tagDelete"><script>print('delete');</script></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="pageContent-2">
+
+            <div id="themeList" class="col-sm-1 sideList panel panel-default">
+                <button type="button" class="btn btn-primary" id="addTheme"><script>print('add theme');</script></button>
+                <ul class="list-group">
+                </ul>
+            </div>
+
+            <div class="pageEditors col-lg-7">
+                <form>
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="themeName"><script>print('theme name')</script></label></div>
+                            <div class="panel-body"><input type="text" class="form-control inputShort" id="themeName" /></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="themeCssEditor"><script>print('css');</script></label></div>
+                            <div class="panel-body" id="cssEditor">
+                                <textarea id="themeCSS" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><label for="themeDescription"><script>print('theme description')</script></label></div>
+                            <div class="panel-body">
+                                <textarea class="form-control" id="themeDescription"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row buttonContainer">
+                        <button type="button" class="btn btn-primary" id="themeSubmit"><script>print('submit');</script></button>
+                        <button type="button" class="btn btn-default" id="themeCancel"><script>print('cancel');</script></button>
+                        <button type="button" class="btn btn-default" id="themeDelete"><script>print('delete');</script></button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>
