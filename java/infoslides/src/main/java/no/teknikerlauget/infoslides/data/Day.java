@@ -42,6 +42,42 @@ public class Day {
 				'}';
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Day day1 = (Day) o;
+
+		if (id != day1.id) {
+			return false;
+		}
+		if (day != null ? !day.equals(day1.day) : day1.day != null) {
+			return false;
+		}
+		if (endTime != null ? !endTime.equals(day1.endTime) : day1.endTime != null) {
+			return false;
+		}
+		if (startTime != null ? !startTime.equals(day1.startTime) : day1.startTime != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id;
+		result = 31 * result + (day != null ? day.hashCode() : 0);
+		result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+		result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+		return result;
+	}
+
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		object.put("id", id);
