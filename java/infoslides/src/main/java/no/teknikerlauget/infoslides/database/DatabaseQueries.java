@@ -99,8 +99,6 @@ public class DatabaseQueries extends DatabaseConnector {
 			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 			generatedKeys.next();
 
-			System.out.printf("Skrev en Tag til databasen og får rapportert at den har fått id'en " + generatedKeys.getInt(1));
-
 			InsertDays(generatedKeys.getInt(1), tag.getDays());
 
 		}

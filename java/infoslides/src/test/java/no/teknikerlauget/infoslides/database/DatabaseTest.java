@@ -27,14 +27,12 @@ public class DatabaseTest {
 	@Test
 	public void WriteTag() {
 		TestData testData = new TestData();
-        
+
 		List<Tag> tags = testData.GetNewTags();
 		DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
 
 		for (Tag tag : tags){
 			databaseQueries.NewTag(tag);
 		}
-
-
 	}
 }
