@@ -1,5 +1,6 @@
 package no.teknikerlauget.infoslides.database;
 
+import no.teknikerlauget.infoslides.TestData;
 import no.teknikerlauget.infoslides.data.Tag;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +26,7 @@ public class DatabaseTest {
     }
 
 	@Test
-	public void WriteTag() {
+	public void writeTag() {
 		TestData testData = new TestData();
 
 		List<Tag> tags = testData.GetNewTags();
