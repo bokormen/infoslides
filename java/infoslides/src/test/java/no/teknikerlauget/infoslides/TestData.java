@@ -29,7 +29,7 @@ public class TestData {
 			String endDate = "2015-08-" + String.format("%02d", i);
 			Repeat repeat = Repeat.values()[i % 3];
 
-			Tag tag = new Tag(tagid, tagName , trueFalse , startDate, endDate , GetDays(), repeat);
+			Tag tag = new Tag(tagid, tagName , trueFalse , startDate, endDate , getNewDays(), repeat);
 			tags.add(tag);
 		}
 
@@ -40,7 +40,7 @@ public class TestData {
      * This creates a list of seven different days that can be used for testing, all days have id -1, indicating they have not been read from the database
      * @return A list containing seven Day
      */
-	public List<Day> GetDays() {
+	public List<Day> getNewDays() {
 		List<Day> days = new ArrayList<>();
 		for (int i = 0; i < 7; i++) {
 			int dayId = -1;
@@ -57,7 +57,7 @@ public class TestData {
      * This creates a list of three different themes that can be used for testing
      * @return A list of three different Theme
      */
-    public List<Theme> GetThemes() {
+    public List<Theme> getNewThemes() {
         List<Theme> themes = new ArrayList<>();
 
         String name = "dark";
@@ -100,9 +100,9 @@ public class TestData {
      * This creates a list of four different slides, all with id -1, indicating that they have not been read from the database, neither one of them have any tags connected to them
      * @return A list of four Slide, the first with little text and a picture, the second withe some text and a picture, the third with much text and a picture, the fourth with just some text
      */
-    public List<Slide> GetSlides() {
+    public List<Slide> getNewSlides() {
         List<Slide> slides = new ArrayList<>();
-        List<Theme> themes = GetThemes();
+        List<Theme> themes = getNewThemes();
         List<Integer> tagIds= new ArrayList<>();
 
         int id = -1;

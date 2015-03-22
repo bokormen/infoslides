@@ -32,7 +32,7 @@ public class DatabaseTest {
 		DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
 
 		for (Tag tag : tags){
-			databaseQueries.NewTag(tag);
+			databaseQueries.newTag(tag);
 		}
 	}
 }
