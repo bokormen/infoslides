@@ -159,7 +159,14 @@ public class Settings {
 	 * @return A full URL to the database
 	 */
 	public String getDatabaseUrl() {
-		return mysqlSpecific + url + port + "/" + databaseName;
+        String databaseUrl = mysqlSpecific + url;
+        if (!port.isEmpty()) {
+            databaseUrl += ":" + port;
+        }
+        databaseUrl +=  "/" + databaseName;
+
+        return databaseUrl;
+		// return mysqlSpecific + url + port + "/" + databaseName;
 	}
 
 	public String getUser() {
