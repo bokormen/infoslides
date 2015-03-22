@@ -207,4 +207,20 @@ public class DatabaseQueries extends DatabaseConnector {
 		Calendar current = new GregorianCalendar();
 		return simpleDateFormat.format(current.getTime());
 	}
+
+    public boolean isTagUnique() {
+        boolean uniqueTag = true;
+
+        // TODO
+
+        return uniqueTag;
+    }
+
+    public boolean isThemeNameUnique() {
+        boolean uniqueTheme = true;
+
+        // TODO
+
+        return uniqueTheme;
+    }
 }
