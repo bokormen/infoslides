@@ -1,6 +1,5 @@
 package no.teknikerlauget.infoslides.data;
 
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,7 @@ public class TagTest {
 	@Before
 	public void setUp() throws Exception {
 		ArrayList<Day> days = new ArrayList<>();
-		days.add(new Day(0, 5, "18:00", "23:00"));
+		days.add(new Day(5, "18:00", "23:00"));
 		tag = new Tag(0, "LM", false, "2015-03-21", "2015-03-29", days, Repeat.WEEKLY);
 	}
 

@@ -154,7 +154,7 @@ public class Tag {
 		List<Day> days = new ArrayList<>();
 		for (int i = 0; i < dayList.length(); i++) {
 			JSONObject day = dayList.getJSONObject(i);
-			days.add(new Day(day.getInt("id"), day.getInt("day"), day.getString("startTime"), day.getString("endTime")));
+			days.add(new Day(day.getInt("day"), day.getString("startTime"), day.getString("endTime")));
 		}
 
 		return new Tag(id, tag, overrideOtherTags, startDate, endDate, days, repeat);
