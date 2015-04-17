@@ -13,7 +13,7 @@ public class DayTest {
 
 	@Before
 	public void setUp() throws Exception {
-		day = new Day(0, 0, "16:00", "17:00");
+		day = new Day(0, "16:00", "17:00");
 	}
 
 	@After

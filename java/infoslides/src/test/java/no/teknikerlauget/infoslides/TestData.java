@@ -42,10 +42,9 @@ public class TestData {
 	public List<Day> getNewDays() {
 		List<Day> days = new ArrayList<>();
 		for (int i = 0; i < 7; i++) {
-			int dayId = -1;
             String startTime = String.format("%02d", i) + ":" + String.format("%02d", i);
 			String endTime = String.format("%02d", i+10) + ":" + String.format("%02d", i+10);
-			Day day = new Day(dayId, i, startTime, endTime);
+			Day day = new Day(i, startTime, endTime);
 
 			days.add(day);
 		}
