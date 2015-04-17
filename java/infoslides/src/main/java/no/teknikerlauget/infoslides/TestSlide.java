@@ -32,7 +32,7 @@ public class TestSlide {
 			e.printStackTrace();
 		}
 
-		Theme theme = new Theme("default", "", "Default theme"); // TODO css
+		Theme theme = new Theme(-1, "default", "", "Default theme"); // TODO css, FIXME id
 		ArrayList<Integer> tagIdList = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
 			tagIdList.add(random.nextInt(100));

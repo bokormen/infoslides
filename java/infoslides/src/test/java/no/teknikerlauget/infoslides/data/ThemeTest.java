@@ -12,7 +12,7 @@ public class ThemeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		theme = new Theme("default", "TODO css", "Default theme");
+		theme = new Theme(-1, "default", "TODO css", "Default theme"); // FIXME id
 	}
 
 	@After
