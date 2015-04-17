@@ -2,6 +2,7 @@ package no.teknikerlauget.infoslides;
 
 import no.teknikerlauget.infoslides.data.*;
 
+import javax.print.attribute.standard.PrinterLocation;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -63,6 +64,7 @@ public class TestData {
         String cssStyle = "";
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/dark.css"))) {
             cssStyle = bufferedReader.readLine();
+            System.out.println(cssStyle);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
