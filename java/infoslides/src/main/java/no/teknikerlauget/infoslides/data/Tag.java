@@ -8,7 +8,12 @@ import java.util.List;
 
 public class Tag {
 
+    /**
+     * @deprecated no longer in use in database, and does therefor noe longer server any purpose
+     */
+    @Deprecated
 	private final int id;
+
 	private final String name;
 	private final boolean overrideOtherTags;
 	private final String startDate;

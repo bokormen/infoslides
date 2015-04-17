@@ -16,20 +16,19 @@ import java.util.Random;
 public class TestData {
 
     /**
-     * This creates a list of three different tags that can be used for testing, all tags have id -1, indicating they have not been read from the database
+     * This creates a list of three different tags that can be used for testing
      * @return A list containing three Tag
      */
 	public List<Tag> GetNewTags() {
 		List<Tag> tags = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
-			int tagid = -1;
 			String tagName = "TestTagNr" + Integer.toString(i+1);
 			Boolean trueFalse = new Random().nextBoolean();
 			String startDate =  "2015-03-" + String.format("%02d", i);
 			String endDate = "2015-08-" + String.format("%02d", i);
 			Repeat repeat = Repeat.values()[i % 3];
 
-			Tag tag = new Tag(tagid, tagName , trueFalse , startDate, endDate , getNewDays(), repeat);
+			Tag tag = new Tag(-1, tagName , trueFalse , startDate, endDate , getNewDays(), repeat);
 			tags.add(tag);
 		}
 
