@@ -17,19 +17,19 @@ import java.util.List;
 public class DatabaseTest {
 
 
-    @Before
-    public void setUp() {
-    }
+	@Before
+	public void setUp() {
+	}
 
-    @After
-    public void tearDown() {
+	@After
+	public void tearDown() {
 
-    }
+	}
 
 	@Test
 	public void writeTag() {
 		TestData testData = new TestData();
-        DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
+		DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
 
 		List<Tag> tags = testData.GetNewTags();
 
@@ -38,17 +38,16 @@ public class DatabaseTest {
 		}
 	}
 
-    @Test
-    public void writeTheme() {
-        TestData testData = new TestData();
-        DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
+	@Test
+	public void writeTheme() {
+		TestData testData = new TestData();
+		DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
 
-        List<Theme> themes = testData.getNewThemes();
+		List<Theme> themes = testData.getNewThemes();
 
-        for (Theme theme : themes) {
-            System.out.print(theme.getCss());
-            databaseQueries.newTheme(theme);
-        }
+		for (Theme theme : themes) {
+			databaseQueries.newTheme(theme);
+		}
 
-    }
+	}
 }
