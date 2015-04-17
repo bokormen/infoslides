@@ -142,27 +142,27 @@ public class DatabaseQueries extends DatabaseConnector {
 
 	public void newTheme(Theme theme) {
 		//TODO
-        //INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES ("eththeme2", "En style nummer to", "en beskrivelse");
-        try {
+		//INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES ("eththeme2", "En style nummer to", "en beskrivelse");
+		try {
 
-            String line = "INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES " + "(?, ?, ?)";
+			String line = "INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES " + "(?, ?, ?)";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(line);
-            preparedStatement.setString(1, theme.getName());
-            preparedStatement.setString(2, theme.getCss());
-            preparedStatement.setString(3, theme.getDescription());
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			preparedStatement.setString(1, theme.getName());
+			preparedStatement.setString(2, theme.getCss());
+			preparedStatement.setString(3, theme.getDescription());
 
-            preparedStatement.executeUpdate();
-        }
-        catch (SQLException exception) {
-            exception.printStackTrace();
-        }
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
 	public void editTheme(Theme theme) {
 		//TODO
-        //UPDATE `Themes` SET `Themename`="eththeme2", `Cssstyle`="En style nummer tre", `Description`= "en beskrivelse" WHERE `Themename`="eththeme2"
-    }
+		//UPDATE `Themes` SET `Themename`="eththeme2", `Cssstyle`="En style nummer tre", `Description`= "en beskrivelse" WHERE `Themename`="eththeme2"
+	}
 
 	public void deleteTheme(Theme theme) {
 		//TODO
@@ -224,19 +224,19 @@ public class DatabaseQueries extends DatabaseConnector {
 		return simpleDateFormat.format(current.getTime());
 	}
 
-    public boolean isTagUnique() {
-        boolean uniqueTag = true;
+	public boolean isTagUnique() {
+		boolean uniqueTag = true;
 
-        // TODO
+		// TODO
 
-        return uniqueTag;
-    }
+		return uniqueTag;
+	}
 
-    public boolean isThemeNameUnique() {
-        boolean uniqueTheme = true;
+	public boolean isThemeNameUnique() {
+		boolean uniqueTheme = true;
 
-        // TODO
+		// TODO
 
-        return uniqueTheme;
-    }
+		return uniqueTheme;
+	}
 }
