@@ -2,7 +2,7 @@ package no.teknikerlauget.infoslides;
 
 import no.teknikerlauget.infoslides.data.*;
 
-import javax.print.attribute.standard.PrinterLocation;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,10 +16,10 @@ import java.util.Random;
  */
 public class TestData {
 
-    /**
-     * This creates a list of three different tags that can be used for testing
-     * @return A list containing three Tag
-     */
+	/**
+	 * This creates a list of three different tags that can be used for testing
+	 * @return A list containing three Tag
+	 */
 	public List<Tag> GetNewTags() {
 		List<Tag> tags = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
@@ -36,15 +36,15 @@ public class TestData {
 		return tags;
 	}
 
-    /**
-     * This creates a list of seven different days that can be used for testing, all days have id -1, indicating they have not been read from the database
-     * @return A list containing seven Day
-     */
+	/**
+	 * This creates a list of seven different days that can be used for testing, all days have id -1, indicating they have not been read from the database
+	 * @return A list containing seven Day
+	 */
 	public List<Day> getNewDays() {
 		List<Day> days = new ArrayList<>();
 		for (int i = 0; i < 7; i++) {
 			int dayId = -1;
-            String startTime = String.format("%02d", i) + ":" + String.format("%02d", i);
+			String startTime = String.format("%02d", i) + ":" + String.format("%02d", i);
 			String endTime = String.format("%02d", i+10) + ":" + String.format("%02d", i+10);
 			Day day = new Day(dayId, i, startTime, endTime);
 
@@ -53,120 +53,138 @@ public class TestData {
 		return days;
 	}
 
-    /**
-     * This creates a list of three different themes that can be used for testing
-     * @return A list of three different Theme
-     */
-    public List<Theme> getNewThemes() {
-        List<Theme> themes = new ArrayList<>();
+	/**
+	 * This creates a list of three different themes that can be used for testing, all themes have id -1, indicating they have not been read from the database
+	 * @return A list of three different Theme
+	 */
+	public List<Theme> getNewThemes() {
+		List<Theme> themes = new ArrayList<>();
 
-        String name = "dark";
-        String cssStyle = "";
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/dark.css"))) {
-            cssStyle = bufferedReader.readLine();
-            System.out.println(cssStyle);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        String description = "Et eksempel theme laget av Rune";
-        Theme theme = new Theme(-1, name, cssStyle, description); // FIXME id
-        themes.add(theme);
+		String name = "dark";
+		String cssStyle = "";
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/dark.css"))) {
+			StringBuffer stringBuffer = new StringBuffer();
 
-        name = "index";
-        cssStyle = "";
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/index.css"))) {
-            cssStyle = bufferedReader.readLine();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        description = "Et stylesheet laget av Øyvind i forbindelse med Webutvikling 1";
-        theme = new Theme(-2, name, cssStyle, description); // FIXME id
-        themes.add(theme);
+			while((cssStyle = bufferedReader.readLine())!=null){
 
-        name = "meny";
-        cssStyle = "";
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/meny.css"))) {
-            cssStyle = bufferedReader.readLine();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        description = "Et stylesheet laget av Øyvind i forbindelse med Webutvikling 1";
-        theme = new Theme(-3, name, cssStyle, description); // FIXME id
-        themes.add(theme);
+				stringBuffer.append(cssStyle).append("\n");
+			}
+			cssStyle = stringBuffer.toString();
+			System.out.println(cssStyle);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+		String description = "Et eksempel theme laget av Rune";
+		Theme theme = new Theme(-1, name, cssStyle, description);
+		themes.add(theme);
 
-        return themes;
-    }
+		name = "index";
+		cssStyle = "";
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/index.css"))) {
+			StringBuffer stringBuffer = new StringBuffer();
 
-    /**
-     * This creates a list of four different slides, all with id -1, indicating that they have not been read from the database, neither one of them have any tags connected to them
-     * @return A list of four Slide, the first with little text and a picture, the second withe some text and a picture, the third with much text and a picture, the fourth with just some text
-     */
-    public List<Slide> getNewSlides() {
-        List<Slide> slides = new ArrayList<>();
-        List<Theme> themes = getNewThemes();
-        List<Integer> tagIds= new ArrayList<>();
+			while((cssStyle = bufferedReader.readLine())!=null){
 
-        int id = -1;
+				stringBuffer.append(cssStyle).append("\n");
+			}
+			cssStyle = stringBuffer.toString();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+		description = "Et stylesheet laget av Øyvind i forbindelse med Webutvikling 1";
+		theme = new Theme(-1, name, cssStyle, description);
+		themes.add(theme);
 
-        String picture = "";
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
-            picture = bufferedReader.readLine();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+		name = "meny";
+		cssStyle = "";
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/meny.css"))) {
+			StringBuffer stringBuffer = new StringBuffer();
 
-        // adds one slide, with little text and with standard picture and id -1
-        String title = "title";
-        String text = "lipsum";
+			while((cssStyle = bufferedReader.readLine())!=null){
 
-        Slide slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
+				stringBuffer.append(cssStyle).append("\n");
+			}
+			cssStyle = stringBuffer.toString();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+		description = "Et stylesheet laget av Øyvind i forbindelse med Webutvikling 1";
+		theme = new Theme(-1, name, cssStyle, description);
+		themes.add(theme);
 
-        slides.add(slide);
+		return themes;
+	}
 
-        // adds one slide, with some text and with standard picture and id -1
-        title = "longer title";
-        text = "";
+	/**
+	 * This creates a list of four different slides, all with id -1, indicating that they have not been read from the database, neither one of them have any tags connected to them
+	 * @return A list of four Slide, the first with little text and a picture, the second withe some text and a picture, the third with much text and a picture, the fourth with just some text
+	 */
+	public List<Slide> getNewSlides() {
+		List<Slide> slides = new ArrayList<>();
+		List<Theme> themes = getNewThemes();
+		List<Integer> tagIds= new ArrayList<>();
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
-            text = bufferedReader.readLine();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+		int id = -1;
 
-        slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
+		String picture = "";
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
+			picture = bufferedReader.readLine();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
 
-        slides.add(slide);
+		// adds one slide, with little text and with standard picture and id -1
+		String title = "title";
+		String text = "lipsum";
 
-        // adds one slide, with much text and with standard picture and id -1
-        title = "very very very very very very long title";
-        text = "";
+		Slide slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
-            for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
-                text += line;
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+		slides.add(slide);
 
-        slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
+		// adds one slide, with some text and with standard picture and id -1
+		title = "longer title";
+		text = "";
 
-        slides.add(slide);
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
+			text = bufferedReader.readLine();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
 
-        // adds one slide, with some text and id -1
-        title = "some title";
-        text = "";
+		slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
-            text = bufferedReader.readLine();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+		slides.add(slide);
 
-        slide = new Slide(id, title, text, "", themes.get(1), tagIds);
+		// adds one slide, with much text and with standard picture and id -1
+		title = "very very very very very very long title";
+		text = "";
 
-        slides.add(slide);
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
+			for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+				text += line;
+			}
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
 
-        return  slides;
-    }
+		slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
+
+		slides.add(slide);
+
+		// adds one slide, with some text and id -1
+		title = "some title";
+		text = "";
+
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("res/base64image.txt"))) {
+			text = bufferedReader.readLine();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+
+		slide = new Slide(id, title, text, "", themes.get(1), tagIds);
+
+		slides.add(slide);
+
+		return  slides;
+	}
 }

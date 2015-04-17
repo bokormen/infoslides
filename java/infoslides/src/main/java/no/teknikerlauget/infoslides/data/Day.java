@@ -9,7 +9,7 @@ public class Day {
      */
     @Deprecated
 	private final int id;
-    
+
 	private final int day;
 	private final String startTime;
 	private final String endTime;

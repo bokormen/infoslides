@@ -116,7 +116,7 @@ public class DatabaseQueries extends DatabaseConnector {
 	}
 
 	public void insertDays(int tagid, List<Day> days) {
-		//TODO
+		//TODO could this somehow be integrated in the tag writhing process, to reduce the number of connections to the database?
 		try {
 
 			String line = "INSERT INTO `Days` (`Dayname`, `Starttime`, `Endtime`, `Tagid`) VALUES " + "(?, ?, ?, ?)";
@@ -142,11 +142,27 @@ public class DatabaseQueries extends DatabaseConnector {
 
 	public void newTheme(Theme theme) {
 		//TODO
+        //INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES ("eththeme2", "En style nummer to", "en beskrivelse");
+        try {
+
+            String line = "INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES " + "(?, ?, ?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(line);
+            preparedStatement.setString(1, theme.getName());
+            preparedStatement.setString(2, theme.getCss());
+            preparedStatement.setString(3, theme.getDescription());
+
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException exception) {
+            exception.printStackTrace();
+        }
 	}
 
 	public void editTheme(Theme theme) {
 		//TODO
-	}
+        //UPDATE `Themes` SET `Themename`="eththeme2", `Cssstyle`="En style nummer tre", `Description`= "en beskrivelse" WHERE `Themename`="eththeme2"
+    }
 
 	public void deleteTheme(Theme theme) {
 		//TODO
