@@ -69,7 +69,7 @@ public class TestData {
             exception.printStackTrace();
         }
         String description = "Et eksempel theme laget av Rune";
-        Theme theme = new Theme(name, cssStyle, description);
+        Theme theme = new Theme(-1, name, cssStyle, description); // FIXME id
         themes.add(theme);
 
         name = "index";
@@ -80,7 +80,7 @@ public class TestData {
             exception.printStackTrace();
         }
         description = "Et stylesheet laget av Øyvind i forbindelse med Webutvikling 1";
-        theme = new Theme(name, cssStyle, description);
+        theme = new Theme(-2, name, cssStyle, description); // FIXME id
         themes.add(theme);
 
         name = "meny";
@@ -91,7 +91,7 @@ public class TestData {
             exception.printStackTrace();
         }
         description = "Et stylesheet laget av Øyvind i forbindelse med Webutvikling 1";
-        theme = new Theme(name, cssStyle, description);
+        theme = new Theme(-3, name, cssStyle, description); // FIXME id
         themes.add(theme);
 
         return themes;
