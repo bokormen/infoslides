@@ -45,8 +45,9 @@ public class DatabaseQueries extends DatabaseConnector {
 		return slides;
 	}
 
-	public void newSlide(Slide slide) {
+	public int newSlide(Slide slide) {
 		//TODO
+		int slideId = -1;
 		try {
 
 			String line = "INSERT INTO `Slides` (`Title`, `Slidetext`, `Picture`, `Themeid`) VALUES " + "(?, ?, ?, ?)";
@@ -61,11 +62,15 @@ public class DatabaseQueries extends DatabaseConnector {
 
 			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 			generatedKeys.next();
-			insertNewTagRefences(generatedKeys.getInt(1), slide.getTagIdList());
+
+			slideId = generatedKeys.getInt(1);
+
+			insertNewTagRefences(slideId, slide.getTagIdList());
 		}
 		catch (SQLException exception) {
 			exception.printStackTrace();
 		}
+		return slideId;
 	}
 
 	public void editSlide(Slide slide){
