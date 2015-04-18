@@ -53,7 +53,7 @@ public class TestData {
 	}
 
 	/**
-	 * This creates a list of three different themes that can be used for testing, all themes have id -1, indicating they have not been read from the database
+	 * This creates a list of three different themes that can be used for testing, the themes have id from 1-3, this can cause trouble if the database isn't empty when the test begins
 	 * @return A list of three different Theme
 	 */
 	public List<Theme> getNewThemes() {
@@ -135,7 +135,7 @@ public class TestData {
 		String title = "title";
 		String text = "lipsum";
 
-		Slide slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
+		Slide slide = new Slide(id, title, text, picture, themes.get(0), tagIds);
 
 		slides.add(slide);
 
@@ -165,7 +165,7 @@ public class TestData {
 			exception.printStackTrace();
 		}
 
-		slide = new Slide(id, title, text, picture, themes.get(1), tagIds);
+		slide = new Slide(id, title, text, picture, themes.get(2), tagIds);
 
 		slides.add(slide);
 

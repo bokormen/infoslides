@@ -5,6 +5,7 @@ import no.teknikerlauget.infoslides.data.Slide;
 import no.teknikerlauget.infoslides.data.Tag;
 import no.teknikerlauget.infoslides.data.Theme;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,10 +47,29 @@ public class DatabaseQueries extends DatabaseConnector {
 
 	public void newSlide(Slide slide) {
 		//TODO
+		try {
+
+			String line = "INSERT INTO `Slides` (`Title`, `Slidetext`, `Picture`, `Themeid`) VALUES " + "(?, ?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, slide.getTitle());
+			preparedStatement.setString(2, slide.getText());
+			preparedStatement.setString(3, slide.getPicture());
+			preparedStatement.setInt(4, slide.getTheme().getId());
+
+			preparedStatement.executeUpdate();
+
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			generatedKeys.next();
+			insertNewTagRefences(generatedKeys.getInt(1), slide.getTagIdList());
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
 	public void editSlide(Slide slide){
-		updateSlideTags(slide);
+		updateSlideTags(slide.getId(), slide.getTagIdList());
 		//TODO
 	}
 
@@ -59,23 +79,50 @@ public class DatabaseQueries extends DatabaseConnector {
 
 	/**
 	 * Deletes all elements in the table slidetags referring to the slide given
-	 * @param slide
+	 * @param slideid
 	 */
-	private void deleteOldTagReferences(Slide slide) {
+	private void deleteOldTagReferences(int slideid) {
 		//TODO
+		try {
+
+			String line = "DELETE FROM `SlideTags` WHERE `Slideid` = ?" ;
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			preparedStatement.setInt(1, slideid);
+
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
 	/**
 	 * Links tags to the given slide in the table slidetags
-	 * @param slide
+	 * @param slideid
 	 */
-	private void insertNewTagRefences(Slide slide) {
+	private void insertNewTagRefences(int slideid, List<Integer> tags) {
 		//TODO
+		try {
+
+			String line = "INSERT INTO `SlideTags` (`Slideid`, `Tagid`) VALUES " + "(?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			for (int tag : tags) {
+				preparedStatement.setInt(1, slideid);
+				preparedStatement.setInt(2, tag);
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
-	private void updateSlideTags(Slide slide) {
-		deleteOldTagReferences(slide);
-		insertNewTagRefences(slide);
+	private void updateSlideTags(int slideid, List<Integer> tags) {
+		deleteOldTagReferences(slideid);
+		insertNewTagRefences(slideid, tags);
 	}
 
 	/**
@@ -166,6 +213,11 @@ public class DatabaseQueries extends DatabaseConnector {
 
 	public void deleteTheme(Theme theme) {
 		//TODO
+		setAffectedSlidesToDefaultTheme();
+	}
+
+	private void setAffectedSlidesToDefaultTheme() {
+		//TODO
 	}
 
 	public List<Slide> getAllSlides() {
@@ -240,6 +292,9 @@ public class DatabaseQueries extends DatabaseConnector {
 		return uniqueTheme;
 	}
 
+	/**
+	 * Truncate every table in the database
+	 */
 	public void emptyMysqlDatabase() {
 		try {
 			String line = "SET foreign_key_checks = 0;";
