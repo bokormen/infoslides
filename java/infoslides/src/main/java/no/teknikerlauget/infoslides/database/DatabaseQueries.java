@@ -239,4 +239,39 @@ public class DatabaseQueries extends DatabaseConnector {
 
 		return uniqueTheme;
 	}
+
+	public void emptyMysqlDatabase() {
+		try {
+			String line = "SET foreign_key_checks = 0;";
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Tags";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Themes";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Slides";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Days";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE SlideTags";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "SET foreign_key_checks = 1;";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+	}
 }

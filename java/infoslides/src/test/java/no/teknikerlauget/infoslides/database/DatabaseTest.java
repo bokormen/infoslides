@@ -19,6 +19,8 @@ public class DatabaseTest {
 
 	@Before
 	public void setUp() {
+		DatabaseQueries databaseQueries = new DatabaseQueries(Program.databaseSettingsPath);
+		databaseQueries.emptyMysqlDatabase();
 	}
 
 	@After

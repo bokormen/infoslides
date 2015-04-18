@@ -69,7 +69,6 @@ public class TestData {
 				stringBuffer.append(cssStyle).append("\n");
 			}
 			cssStyle = stringBuffer.toString();
-			System.out.println(cssStyle);
 		} catch (IOException exception) {
 			exception.printStackTrace();
 		}
