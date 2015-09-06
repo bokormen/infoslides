@@ -9,9 +9,11 @@ $(document).ready(function(){
     else window.sessionStorage.setItem('curView', 0);
     var slides      = [];
     var tags        = [];
+    var themes      = [];
     var curDays     = [];
     var curSlide    = -2;
     var curTag      = -2;
+    var curTheme    = -2;
     var days        = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
     var socketUrl   = 'localhost';
     var calFrom     = new dhtmlXCalendarObject("tagDateFrom", false);
@@ -43,6 +45,8 @@ $(document).ready(function(){
     $('#slideImageError').hide();
     $('#slideImagePreview').hide();
     $('#addSlide').removeAttr('disabled');
+    $('#addTag').removeAttr('disabled');
+    $('#addTheme').removeAttr('disabled');
 
     /**
      * Set onclick response for each tab
@@ -294,6 +298,7 @@ $(document).ready(function(){
         };
         tags.push(tag);
         updateTagList();
+        $('#addTag').attr('disabled', 'disabled');
         $('#tagList').find('ul.list-group').children().each(function(i){
             if($(this).data("id") == -1){
                 $(this).trigger('click');
@@ -462,4 +467,82 @@ $(document).ready(function(){
 
     // --- THEMES ---
 
+    /**
+     * Add theme to the theme list and select it
+     */
+    $('#addTheme').on('click', function () {
+        var theme = {
+            id: -1,
+            title: getTranslation('new theme'),
+            css: '',
+            description: ''
+        };
+        themes.push(theme);
+        updateThemeList();
+        $('#addTheme').attr('disabled', 'disabled');
+        $('#themeList').find('ul.list-group').children().each(function(){
+            if($(this).data('id') == -1){
+                $(this).trigger('click');
+                return false;
+            }
+        })
+    });
+
+    function updateThemeList(){
+        $('#themeList').find('ul').first().html("");
+        $(themes).each(function () {
+            var opt = '<li class="list-group-item" data-id="' + this.id + '">' + this.title + '</li>';
+            $('#themeList').find('ul').first().append(opt);
+        });
+        addThemeListListener();
+    }
+
+    function addThemeListListener(){
+        $('#themeList').find('ul').first().children().each(function(){
+            $(this).on('click', function () {
+                $('#themeList').find('ul').first().children().removeClass('active');
+                loadTheme(parseInt($(this).attr('data-id')));
+                $(this).addClass('active');
+            });
+        });
+    }
+
+    function loadTheme(id){
+        var theme = null;
+        $(themes).each(function () {
+            if(this.id == id){
+                theme = this;
+                return false;
+            }
+        });
+        if(theme == null) return;
+        curTheme = id;
+
+        $('#themeName').val(theme.title);
+        $('#themeCSS').val(theme.css);
+        $('#themeDescription').val(theme.description);
+    }
+
+    $('#themeSubmit').on('click', function () {
+        var json = {
+            type: 'theme',
+            id: curTheme,
+            title: $('#themeTitle').val(),
+            css: $('#themeCSS').val(),
+            description: $('#themeDescription').val()
+        };
+        var jsonText = JSON.stringify(json);
+        console.log(jsonText);
+    });
+
+    $('#themeCancel').on('click', function () {
+        loadTheme(curTheme);
+    });
+
+    $('#themeDelete').on('click', function () {
+        var json = {
+            type: 'removeTheme',
+            id: curTheme
+        };
+    });
 });
