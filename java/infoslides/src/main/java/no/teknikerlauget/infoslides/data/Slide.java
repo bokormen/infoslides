@@ -13,7 +13,7 @@ public class Slide {
 	private final String text;
 	private final String picture;
 	private final Theme theme;
-	private final List<Integer> tagIdList;
+	private final List<Integer> tagIdList; //TODO should discuss changing list content to Tag instead of Integer
 
 	public Slide(int id, String title, String text, String picture, Theme theme, List<Integer> tagIdList) {
 		this.id = id;
