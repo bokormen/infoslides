@@ -9,6 +9,7 @@ $(document).ready(function(){
     else window.sessionStorage.setItem('curView', 0);
     var slides      = [];
     var tags        = [];
+    var curDays     = [];
     var curSlide    = -2;
     var curTag      = -2;
     var days        = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -74,13 +75,14 @@ $(document).ready(function(){
      * Create a new slide
      */
     $('#addSlide').on('click', function () {
-        var slide = {'type': 'slide',
-            'id': -1,
-            'title': getTranslation('new slide'),
-            'text': '',
-            'picture': '',
-            'theme': 0,
-            'tags': []
+        var slide = {
+            type: 'slide',
+            id: -1,
+            title: getTranslation('new slide'),
+            text: '',
+            picture: '',
+            theme: 0,
+            tags: []
         };
         slides.push(slide);
         updateSlideList();
@@ -97,8 +99,11 @@ $(document).ready(function(){
      * Remove the current slide
      */
     $('#slideDelete').on('click', function(){
-        var jsonText = '{ "type": "removeSlide", "id": ' + curSlide + ' }';
-        //socket.send(json);
+        var json = {
+            'type': 'removeSlide',
+            'id': curSlide
+        };
+        // TODO Send json to server
     });
 
     /**
@@ -275,6 +280,120 @@ $(document).ready(function(){
     // --- TAGS ---
 
     /**
+     * Add tag to the tag list
+     */
+    $('#addTag').on('click', function(){
+        var tag = {
+            id: -1,
+            title: 'new tag',
+            startDate: '',
+            endDate: '',
+            days: [],
+            repeat: 0,
+            overwrite: 0
+        };
+        tags.push(tag);
+        updateTagList();
+        $('#tagList').find('ul.list-group').children().each(function(i){
+            if($(this).data("id") == -1){
+                $(this).trigger('click');
+                return false;
+            }
+        });
+    });
+
+    /**
+     * Update the GUI tag list with all the tags
+     */
+    function updateTagList(){
+        $('#tagList').find('ul').first().html("");
+        $(tags).each(function () {
+            var opt = '<li class="list-group-item" data-id="' + this.id + '">' + this.title + '</li>';
+            $('#tagList').find('ul').first().append(opt);
+        });
+        addTagListListener();
+    }
+
+    /**
+     * Add listener to the tag list items in the tag list
+     */
+    function addTagListListener(){
+        $('#tagList').find('ul').first().children().each(function(){
+            $(this).on('click', function () {
+                $('#tagList').find('ul').first().children().removeClass('active');
+                loadTag(parseInt($(this).attr('data-id')));
+                $(this).addClass('active');
+            });
+        });
+    }
+
+    /**
+     * Load the tag into the tag editor view
+     * @param id ID of the tag to be edited
+     */
+    function loadTag(id){
+        var tag = null;
+        $(tags).each(function () {
+            if(this.id == id){
+                tag = this;
+                return false;
+            }
+        });
+        if(tag == null) return;
+        curTag = id;
+        curDays = tag.days.slice(0);
+
+        $('#tagName').val(tag.title);
+        $('#tagDateFrom').val(tag.startDate);
+        $('#tagDateTo').val(tag.endDate);
+        updateDayList();
+        $('#tagRepeat').val(tag.repeat);
+        $('#tagOverwrite').val(tag.overwrite);
+    }
+
+    /**
+     * Submit the tag to the server
+     */
+    $('#tagSubmit').on('click', function () {
+        for(var tag in tags){
+            if(tags[tag].id == curTag){
+                tags[tag].days = curDays.slice(0);
+                break;
+            }
+        }
+        var json = {
+            type: 'tag',
+            id: curTag,
+            title: $('#tagName').val(),
+            startDate: $('#tagDateFrom').val(),
+            endDate: $('#tagDateTo').val(),
+            days: curDays,
+            repeat: parseInt($('#tagRepeat').val()),
+            overwrite: parseInt($('#tagOverride').val())
+        };
+        var jsonText = JSON.stringify(json);
+        console.log(jsonText);
+    });
+
+    /**
+     * Reset the tag to the last saved state
+     */
+    $('#tagCancel').on('click', function () {
+        loadTag(curTag);
+    });
+
+    /**
+     * Remove tag from the tag list
+     */
+    $('#tagDelete').on('click', function(){
+        var json = {
+            'type': 'removeTag',
+            'id': curTag
+        };
+        //TODO send json to server
+    });
+
+    /**
      * Clear the modal for adding a day, i.e. set all the dropdowns to selection 0
      */
     function clearDaysModal(){
@@ -294,29 +413,26 @@ $(document).ready(function(){
      * @returns {{day: *, startTime: string, endTime: string}}
      */
     function createDay(day, startHour, startMins, endHour, endMins){
-        return {'day': day, 'startTime':startHour + ":" + startMins, 'endTime':endHour + ":" + endMins};
+        return {
+            day: day,
+            startTime: startHour + ":" + startMins,
+            endTime: endHour + ":" + endMins
+        };
     }
 
     /**
      * Add all days for the tag to the day list, and add event listeners for removing them
      */
     function updateDayList(){
-        var tag = null;
-        tags.forEach(function(entry){
-            if(entry.id = curTag){
-                tag = entry;
-                return false;
-            }
-        });
-        if(tag == null) return false;
-        $('#dayList').html('<li class="list-group-item list-group-item-info floatContainer"><strong>' + getTranslation('days') + '</strong><button type="button" class="btn btn-default btnRight" data-toggle="modal" data-target="#addDayModal">' + getTranslation('add day') + '</button></li>');
+        $('#dayList').find('li.liDay').remove();
         var i = 0;
-        tag.days.forEach(function(entry){
-            $('#dayList').append('<li class="list-group-item floatContainer" id="tagDayList-' + i + '">' + getTranslation(days[entry.day]) + ' | ' + entry.startTime + ' - ' + entry.endTime + '<button type="button" class="btn btn-default btnRight removeDay">&times;</button></li>');
+        curDays.forEach(function(entry){
+            $('#dayList').append('<li class="list-group-item floatContainer liDay" id="tagDayList-' + i + '">' + getTranslation(days[entry.day]) + ' | ' + entry.startTime + ' - ' + entry.endTime + '<button type="button" class="btn btn-default btnRight removeDay">&times;</button></li>');
+            i++;
         });
         $('.removeDay').on('click', function () {
             var id = $(this).parent().attr('id').split('-')[-1];
-            tag.days.splice(id, 1);
+            curDays.splice(id, 1);
             updateDayList();
         });
     }
@@ -332,23 +448,18 @@ $(document).ready(function(){
      * Add the day to the current tag
      */
     $('#daysModalAdd').on('click', function () {
-        var tag;
-        tags.forEach(function(entry){
-            if(entry.id = curTag) tag = entry;
-        });
         var add = true;
-        if(tag == null || tag == undefined) tag = {};
-        if(tag.days == null || tag.days == undefined) tag.days = [];
         var day = createDay($('#days').val(), $("#hoursFrom").val(), $('#minsFrom').val(), $('#hoursTo').val(), $('#minsTo').val());
-        tag.days.forEach(function(entry){
+        curDays.forEach(function(entry){
             if(entry.startTime == day.startTime && entry.endTime == day.endTime && entry.day == day.day) add = false;
         });
         if(Date.parse('01/01/2000 ' + day.startTime) > Date.parse('01/01/2000 ' + day.endTime)) add = false;
-        if(add) tag.days.push(day);
+        if(add) curDays.push(day);
         updateDayList();
         $('#addDayModal').modal('hide');
         clearDaysModal();
     });
 
     // --- THEMES ---
+
 });
