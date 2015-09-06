@@ -5,10 +5,12 @@ import no.teknikerlauget.infoslides.data.Slide;
 import no.teknikerlauget.infoslides.data.Tag;
 import no.teknikerlauget.infoslides.data.Theme;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,125 +37,213 @@ public class DatabaseQueries extends DatabaseConnector {
 		super(propertiesPath);
 	}
 
-	public List<Slide> GetSlideshow() {
-		String currentClockTime = GetCurrentClockTime();
-		String currentDate = GetCurrentDate();
+	public List<Slide> getSlideshow() {
+		String currentClockTime = getCurrentClockTime();
+		String currentDate = getCurrentDate();
 		List<Slide> slides = new ArrayList<Slide>();
 		//TODO
 		return slides;
 	}
 
-	public void NewSlide(Slide slide) {
+	public int newSlide(Slide slide) {
+		//TODO
+		int slideId = -1;
+		try {
+
+			String line = "INSERT INTO `Slides` (`Title`, `Slidetext`, `Picture`, `Themeid`) VALUES " + "(?, ?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, slide.getTitle());
+			preparedStatement.setString(2, slide.getText());
+			preparedStatement.setString(3, slide.getPicture());
+			preparedStatement.setInt(4, slide.getTheme().getId());
+
+			preparedStatement.executeUpdate();
+
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			generatedKeys.next();
+
+			slideId = generatedKeys.getInt(1);
+
+			insertNewTagRefences(slideId, slide.getTagIdList());
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+		return slideId;
+	}
+
+	public void editSlide(Slide slide){
+		updateSlideTags(slide.getId(), slide.getTagIdList());
 		//TODO
 	}
 
-	public void EditSlide(Slide slide){
-		UpdateSlideTags(slide);
-		//TODO
-	}
-
-	public void DeleteSlide(Slide slide) {
+	public void deleteSlide(Slide slide) {
 		//TODO
 	}
 
 	/**
 	 * Deletes all elements in the table slidetags referring to the slide given
-	 * @param slide
+	 * @param slideid
 	 */
-	private void DeleteOldTagReferences(Slide slide) {
+	private void deleteOldTagReferences(int slideid) {
 		//TODO
+		try {
+
+			String line = "DELETE FROM `SlideTags` WHERE `Slideid` = ?" ;
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			preparedStatement.setInt(1, slideid);
+
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
 	/**
 	 * Links tags to the given slide in the table slidetags
-	 * @param slide
+	 * @param slideid
 	 */
-	private void InsertNewTagRefences(Slide slide) {
+	private void insertNewTagRefences(int slideid, List<Integer> tags) {
 		//TODO
+		try {
+
+			String line = "INSERT INTO `SlideTags` (`Slideid`, `Tagid`) VALUES " + "(?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			for (int tag : tags) {
+				preparedStatement.setInt(1, slideid);
+				preparedStatement.setInt(2, tag);
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
-	private void UpdateSlideTags(Slide slide) {
-		DeleteOldTagReferences(slide);
-		InsertNewTagRefences(slide);
-	}
-
-	public void NewTag(Tag tag) {
-		//TODO
-	}
-
-	public void DeleteTag(Tag tag) {
-		//TODO
-	}
-
-	public void EditTag(Tag tag) {
-		UpdateTagDays(tag);
-		//TODO
+	private void updateSlideTags(int slideid, List<Integer> tags) {
+		deleteOldTagReferences(slideid);
+		insertNewTagRefences(slideid, tags);
 	}
 
 	/**
-	 * Deletes all elements in the table tagdays referring to the tag given
-	 * @param tag
+	 * This method inserts the given tag as a new tag in the database
+	 * @param tag this should be a tag sent from edit page with id -1
 	 */
-	private void DeleteOldDayReferences(Tag tag) {
+	public void newTag(Tag tag) {
+		try {
+
+			String line = "INSERT INTO `Tags` (`Tag`, `Startdate`, `Enddate`, `Repeatweeks`) VALUES " + "(?, ?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line, Statement.RETURN_GENERATED_KEYS);
+
+			preparedStatement.setString(1, tag.getName());
+			preparedStatement.setString(2, tag.getStartDate());
+			preparedStatement.setString(3, tag.getEndDate());
+			preparedStatement.setString(4, tag.getRepeat().name());
+
+			preparedStatement.executeUpdate();
+
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			generatedKeys.next();
+
+			insertDays(generatedKeys.getInt(1), tag.getDays());
+
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	public void deleteTag(Tag tag) {
 		//TODO
 	}
 
-	/**
-	 * Links tags to the given stag in the table tagdays
-	 * @param tag
-	 */
-	private void InsertNewDayRefences(Tag tag) {
+	public void editTag(Tag tag) {
 		//TODO
 	}
 
-	private void UpdateTagDays(Tag tag) {
-		DeleteOldDayReferences(tag);
-		InsertNewDayRefences(tag);
+	public void insertDays(int tagid, List<Day> days) {
+		//TODO could this somehow be integrated in the tag writhing process, to reduce the number of connections to the database?
+		try {
+
+			String line = "INSERT INTO `Days` (`Dayname`, `Starttime`, `Endtime`, `Tagid`) VALUES " + "(?, ?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			for (Day day : days) {
+				preparedStatement.setInt(1, day.getDay());
+				preparedStatement.setString(2, day.getStartTime());
+				preparedStatement.setString(3, day.getEndTime());
+				preparedStatement.setInt(4, tagid);
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 
-	public void NewDay(Day day) {
+	public void deleteDays(int tagid) {
 		//TODO
 	}
 
-	public void EditDay(Day day) {
+	public void newTheme(Theme theme) {
+		//TODO
+		//INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES ("eththeme2", "En style nummer to", "en beskrivelse");
+		try {
+
+			String line = "INSERT INTO `Themes` (`Themename`, `Cssstyle`, `Description`) VALUES " + "(?, ?, ?)";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			preparedStatement.setString(1, theme.getName());
+			preparedStatement.setString(2, theme.getCss());
+			preparedStatement.setString(3, theme.getDescription());
+
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	public void editTheme(Theme theme) {
+		//TODO
+		//UPDATE `Themes` SET `Themename`="eththeme2", `Cssstyle`="En style nummer tre", `Description`= "en beskrivelse" WHERE `Themename`="eththeme2"
+	}
+
+	public void deleteTheme(Theme theme) {
+		//TODO
+		setAffectedSlidesToDefaultTheme();
+	}
+
+	private void setAffectedSlidesToDefaultTheme() {
 		//TODO
 	}
 
-	public void DeleteDay(Day day) {
-		//TODO
-	}
-
-	public void NewTheme(Theme theme) {
-		//TODO
-	}
-
-	public void EditTheme(Theme theme) {
-		//TODO
-	}
-
-	public void Delete(Theme theme) {
-		//TODO
-	}
-
-	public List<Slide> GetAllSlides() {
+	public List<Slide> getAllSlides() {
 		List<Slide> slides = new ArrayList<Slide>();
 		//TODO
 		return slides;
 	}
 
-	public List<Tag> GetAllTags() {
+	public List<Tag> getAllTags() {
 		List<Tag> tags = new ArrayList<>();
 		//TODO
 		return tags;
 	}
 
-	public List<Theme> GetAllThemes() {
+	public List<Theme> getAllThemes() {
 		List<Theme> themes = new ArrayList<>();
 		//TODO
 		return themes;
 	}
 
-	public List<Slide> GetInfoslides(String input) {
+	public List<Slide> getInfoslides(String input) {
 		List<Slide> slides = new ArrayList<Slide>();
 		try {
 			String query = "SELECT T.TopicId FROM Topics AS T WHERE T.Topic = ?;";
@@ -175,19 +265,73 @@ public class DatabaseQueries extends DatabaseConnector {
 		return slides;
 	}
 
-	public List<Slide> GetInfoslideByID(int id) {
+	public List<Slide> getInfoslideByID(int id) {
 		List<Slide> slides = new ArrayList<Slide>();
 		//TODO
 		return slides;
 	}
 
-	private String GetCurrentClockTime() {
+	private String getCurrentClockTime() {
 		Calendar current = new GregorianCalendar();
 		return String.format("%02d", current.get(Calendar.HOUR_OF_DAY)) + ":" + current.get(Calendar.MINUTE);
 	}
 
-	private String GetCurrentDate() {
+	private String getCurrentDate() {
 		Calendar current = new GregorianCalendar();
 		return simpleDateFormat.format(current.getTime());
+	}
+
+	public boolean isTagUnique() {
+		boolean uniqueTag = true;
+
+		// TODO
+
+		return uniqueTag;
+	}
+
+	public boolean isThemeNameUnique() {
+		boolean uniqueTheme = true;
+
+		// TODO
+
+		return uniqueTheme;
+	}
+
+	/**
+	 * Truncate every table in the database
+	 */
+	public void emptyMysqlDatabase() {
+		try {
+			String line = "SET foreign_key_checks = 0;";
+			PreparedStatement preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Tags";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Themes";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Slides";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE Days";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "TRUNCATE TABLE SlideTags";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+			line = "SET foreign_key_checks = 1;";
+			preparedStatement = connection.prepareStatement(line);
+			preparedStatement.execute();
+
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 	}
 }

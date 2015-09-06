@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Tag {
 
+
 	private final int id;
 	private final String name;
 	private final boolean overrideOtherTags;
@@ -132,9 +133,9 @@ public class Tag {
 		object.put("repeat", repeat.name());
 
 		// Add the list of days
-		List<Day> jsonDays = new ArrayList<>();
-		for (Day day : days) {
-			jsonDays.add(day);
+		JSONArray jsonDays = new JSONArray();
+		for (int i = 0; i < days.size(); i++) {
+			jsonDays.put(i, days.get(i).toJson());
 		}
 		object.put("days", jsonDays);
 
@@ -149,11 +150,11 @@ public class Tag {
 		String endDate = json.get("endDate").toString();
 		Repeat repeat = Repeat.getFromString(json.getString("repeat"));
 
-		JSONArray dayList = (JSONArray) json.get("days");
+		JSONArray dayList = json.getJSONArray("days");
 		List<Day> days = new ArrayList<>();
 		for (int i = 0; i < dayList.length(); i++) {
 			JSONObject day = dayList.getJSONObject(i);
-			days.add(new Day(day.getInt("id"), day.getInt("day"), day.getString("startTime"), day.getString("endTime")));
+			days.add(new Day(day.getInt("day"), day.getString("startTime"), day.getString("endTime")));
 		}
 
 		return new Tag(id, tag, overrideOtherTags, startDate, endDate, days, repeat);

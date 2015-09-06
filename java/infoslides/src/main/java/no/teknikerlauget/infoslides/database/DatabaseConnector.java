@@ -1,6 +1,7 @@
 package no.teknikerlauget.infoslides.database;
 
-import javax.management.Query;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,12 +30,24 @@ public class DatabaseConnector {
 	 */
 	public DatabaseConnector(File propertiesPath) {
 		this.settings = new Settings(propertiesPath);
+		open();
 	}
 
 	/**
 	 * This will open a connection to a mysql database
 	 */
 	public void open() {
+		MysqlDataSource ds = new MysqlDataSource();
+		ds.setServerName(settings.getUrl());
+		ds.setDatabaseName(settings.getDatabaseName());
+		ds.setUser(settings.getUser());
+		ds.setPassword(settings.getPassword());
+		try {
+			connection = ds.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		/**
 		try {
 
 			try {
@@ -43,16 +56,12 @@ public class DatabaseConnector {
 			catch (InstantiationException | IllegalAccessException exception) {
 				exception.printStackTrace();
 			}
-
+			System.out.println(settings.getDatabaseUrl());
 			connection = DriverManager.getConnection(settings.getDatabaseUrl(), settings.getUser(), settings.getPassword());
 		}
 		catch (ClassNotFoundException | SQLException exception) {
 			exception.printStackTrace();
-		}
-	}
-
-	public void sendQuery(Query query) {
-		// TODO
+		}	*/
 	}
 
 	/**

@@ -1,0 +1,64 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td
+	{ 
+		margin:0;
+		padding:0;
+	}
+
+body
+	{
+		background-color: #858585;
+		width: 100%;
+	}
+ul
+	{
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+
+li
+	{
+		float: left;
+	}
+	
+li:hover
+	{
+		background-color: #303030;
+	}
+
+a
+	{
+		text-decoration: none;
+		display: block;
+		width: 65px;
+		font-weight: bold;
+	}
+
+a:link
+	{
+		color: #202020;
+	}
+
+a:visited 
+	{
+		color: #202020;;
+	}
+
+a:hover
+	{
+		color: #F0F0F0;
+	}
+
+a:active
+	{
+		color: #FFFFFF;
+	}
+
+#content
+	{
+		position: relative;
+		width: 100%;
+		top: 0px;
+		left: 0px;
+	}
