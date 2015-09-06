@@ -9,8 +9,8 @@ $(document).ready(function(){
     else window.sessionStorage.setItem('curView', 0);
     var slides      = [];
     var tags        = [];
-    var curSlide    = 0;
-    var curTag      = 0;
+    var curSlide    = -2;
+    var curTag      = -2;
     var days        = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
     var socketUrl   = 'localhost';
     var calFrom     = new dhtmlXCalendarObject("tagDateFrom", false);
@@ -43,7 +43,9 @@ $(document).ready(function(){
     $('#slideImagePreview').hide();
     $('#addSlide').removeAttr('disabled');
 
-
+    /**
+     * Set onclick response for each tab
+     */
     $('#mainNav').children().each(function (i){
         $(this).on('click', function (){
             if(i == curView) return;
@@ -57,8 +59,22 @@ $(document).ready(function(){
         });
     });
 
+    /**
+     * Change the view of the window
+     * @param i index of the selected view
+     */
+    function changeView(i){
+        $('#pageContent').children().hide();
+        $('#pageContent-' + i).show();
+    }
+
+    // --- SLIDES ---
+
+    /**
+     * Create a new slide
+     */
     $('#addSlide').on('click', function () {
-        var slide = {'type': slide,
+        var slide = {'type': 'slide',
             'id': -1,
             'title': getTranslation('new slide'),
             'text': '',
@@ -69,47 +85,75 @@ $(document).ready(function(){
         slides.push(slide);
         updateSlideList();
         $('#addSlide').attr('disabled', 'disabled');
+        $('#slideList').find('ul.list-group').children().each(function(i){
+            if($(this).data("id") == "-1"){
+                $(this).trigger('click');
+                return false;
+            }
+        });
     });
 
+    /**
+     * Remove the current slide
+     */
     $('#slideDelete').on('click', function(){
-        var jsonText = '{ "type": "removeSlide", "id": "' + curSlide + '" }';
+        var jsonText = '{ "type": "removeSlide", "id": ' + curSlide + ' }';
         //socket.send(json);
     });
 
+    /**
+     * Submit the slide to the server
+     */
     $('#slideSubmit').on('click', function(){
         var json = { "type": "slide",
             "id": curSlide,
             "title": $('#slideName').val(),
             "text": getTextWithBreaks(),
             "picture": $('img#slideImagePreview').attr('src'),
-            "theme": $("#slideSelectTheme").val(),
+            "theme": parseInt($("#slideSelectTheme").val()),
             "tags": getTags()};
         var jsonText = JSON.stringify(json);
         console.log(jsonText);
     });
 
+    /**
+     * Reset the slide to the previously saved state
+     */
     $('slideCancel').on('click', loadSlide(curSlide));
 
+    /**
+     * Replace line breaks (\n) in the slide text with html line breaks (<br />
+     * @returns {XML|string|void} The new text
+     */
     function getTextWithBreaks(){
         var text = $('#slideText').val();
-        text.replace('\n', '<br />');
-        return text;
+        return text.replace('\n', '<br />');
     }
 
+    /**
+     * Replace html line breaks (<br /> with line breaks (\n)
+     * @param text The text to change
+     * @returns {XML|string|void}
+     */
     function getTextWithLineBreaks(text){
         return text.replace(/<br.*>/, '\n');
     }
 
+    /**
+     * Get json array of the tags for the selected slide
+     * @returns {Array}
+     */
     function getTags(){
-        var tags = "[";
+        var tags = [];
         $('#slideSelectTagsTo').children().each(function(){
-            if(!$(this).attr('disabled')) tags += '"' + $(this).attr('data-id') + '",';
+            if(!$(this).attr('disabled')) tags.append($(this).attr('data-id'));
         });
-        tags = tags.substr(0, tags.length - 1);
-        tags += "]";
         return tags;
     }
 
+    /**
+     * Get the image chosen, check that it is an image and display it, or an error if it isn't an image
+     */
     $('#slideImageChooser').on('change', function (e) {
         var file = e.originalEvent.target.files[0], reader = new FileReader();
         reader.onload = function(evt){
@@ -127,6 +171,9 @@ $(document).ready(function(){
         }
     });
 
+    /**
+     * Add tag to slide
+     */
     $('#slideSelectAdd').on('click', function(e){
         e.preventDefault();
         $('#slideSelectTagsFrom option:selected').each( function() {
@@ -134,6 +181,10 @@ $(document).ready(function(){
             $(this).remove();
         });
     });
+
+    /**
+     * Remove tag from slide
+     */
     $('#slideSelectRemove').on('click', function(e){
         e.preventDefault();
         $('#slideSelectTagsTo option:selected').each( function() {
@@ -142,19 +193,30 @@ $(document).ready(function(){
         });
     });
 
+    /**
+     * Update the GUI-list of tags for the selected slide
+     * @param selectedTags The tags belonging to the current slide
+     */
     function updateSlideTags(selectedTags){
         $('#slideSelectTagsFrom').html("");
         $('#slideSelectTagsTo').html("");
         $(tags).each(function () {
-            if(selectedTags.contains(this.id))$('#slideSelectTagsTo').append('<ul data-id="' + this.id + '">' + this.name + '</li>');
-            else $('#slideSelectTagsFrom').append('<li data-id="' + this.id + '">' + this.name + '</option>');
+            if(selectedTags.contains($(this).id)) $('#slideSelectTagsTo').append('<ul data-id="' + $(this).id + '">' + $(this).name + '</li>');
+            else $('#slideSelectTagsFrom').append('<li data-id="' + $(this).id + '">' + $(this).name + '</option>');
         });
     }
 
+    /**
+     * Load a slide into the editor-view
+     * @param id The ID of the tag
+     */
     function loadSlide(id){
-        var slide;
+        var slide = null;
         $(slides).each(function () {
-            if(this.id == id) slide = this;
+            if(this.id == id){
+                slide = this;
+                return false;
+            }
         });
         if(slide == null) return;
         curSlide = id;
@@ -175,12 +237,19 @@ $(document).ready(function(){
         $('#slideSelectTheme').select(slide.theme);
     }
 
+    /**
+     * Get the slide list from the json object received from the server
+     * @param json The json object containing the slides
+     */
     function getSlideList(json){
         slides = json.slides;
         updateSlideList();
         $('#addSlide').removeAttr('disabled');
     }
 
+    /**
+     * Add all slides to the slide list
+     */
     function updateSlideList(){
         $('#slideList').find('ul').first().html("");
         $(slides).each(function () {
@@ -190,6 +259,9 @@ $(document).ready(function(){
         addSlideListListener();
     }
 
+    /**
+     * Add onClick listener for the elements in the slide list. Sets the selected slide active
+     */
     function addSlideListListener(){
         $('#slideList').find('ul').first().children().each(function(){
             $(this).on('click', function () {
@@ -200,11 +272,11 @@ $(document).ready(function(){
         });
     }
 
-    function changeView(i){
-        $('#pageContent').children().hide();
-        $('#pageContent-' + i).show();
-    }
+    // --- TAGS ---
 
+    /**
+     * Clear the modal for adding a day, i.e. set all the dropdowns to selection 0
+     */
     function clearDaysModal(){
         $('#addDayModal').find('select').each(function(){
             $(this).children().removeAttr('selected');
@@ -212,15 +284,31 @@ $(document).ready(function(){
         });
     }
 
+    /**
+     * Create a new json object containing information about the day
+     * @param day
+     * @param startHour
+     * @param startMins
+     * @param endHour
+     * @param endMins
+     * @returns {{day: *, startTime: string, endTime: string}}
+     */
     function createDay(day, startHour, startMins, endHour, endMins){
         return {'day': day, 'startTime':startHour + ":" + startMins, 'endTime':endHour + ":" + endMins};
     }
 
+    /**
+     * Add all days for the tag to the day list, and add event listeners for removing them
+     */
     function updateDayList(){
-        var tag;
+        var tag = null;
         tags.forEach(function(entry){
-            if(entry.id = curTag) tag = entry;
+            if(entry.id = curTag){
+                tag = entry;
+                return false;
+            }
         });
+        if(tag == null) return false;
         $('#dayList').html('<li class="list-group-item list-group-item-info floatContainer"><strong>' + getTranslation('days') + '</strong><button type="button" class="btn btn-default btnRight" data-toggle="modal" data-target="#addDayModal">' + getTranslation('add day') + '</button></li>');
         var i = 0;
         tag.days.forEach(function(entry){
@@ -233,10 +321,16 @@ $(document).ready(function(){
         });
     }
 
+    /**
+     * Close the day modal
+     */
     $('.daysModalClose').on('click', function () {
         clearDaysModal();
     });
 
+    /**
+     * Add the day to the current tag
+     */
     $('#daysModalAdd').on('click', function () {
         var tag;
         tags.forEach(function(entry){
@@ -255,4 +349,6 @@ $(document).ready(function(){
         $('#addDayModal').modal('hide');
         clearDaysModal();
     });
+
+    // --- THEMES ---
 });
