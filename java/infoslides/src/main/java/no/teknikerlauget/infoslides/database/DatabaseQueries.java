@@ -167,6 +167,12 @@ public class DatabaseQueries extends DatabaseConnector {
 		//TODO
 	}
 
+	private List<Integer> getTagsToSlide(int slideId) {
+		List<Integer> tags = new ArrayList<Integer>();
+		//TODO should return a list of tagids of tags connected to a slide
+		return tags;
+	}
+
 	public void insertDays(int tagid, List<Day> days) {
 		//TODO could this somehow be integrated in the tag writhing process, to reduce the number of connections to the database?
 		try {
@@ -221,13 +227,41 @@ public class DatabaseQueries extends DatabaseConnector {
 		setAffectedSlidesToDefaultTheme();
 	}
 
+	private Theme getTheme(int id) {
+		Theme theme = null;
+		//TODO
+		return theme;
+	}
+
 	private void setAffectedSlidesToDefaultTheme() {
 		//TODO
 	}
 
 	public List<Slide> getAllSlides() {
-		List<Slide> slides = new ArrayList<Slide>();
 		//TODO
+		List<Slide> slides = new ArrayList<Slide>();
+		try {
+			String query = "SELECT * FROM slides;";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("Slideid");
+				String title = resultSet.getString("Title");
+				String text = resultSet.getString("Slidetext");
+				String picture = resultSet.getString("Picture");
+				Theme theme = getTheme(resultSet.getInt("Themeid"));
+				List<Integer> tags = getTagsToSlide(id);
+				Slide slide = new Slide(id,title,text,picture,theme,tags);
+				slides.add(slide);
+			}
+
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 		return slides;
 	}
 
