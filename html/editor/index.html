@@ -154,9 +154,9 @@
                                 <div class="input-group">
                                     <div class="input-group-addon"><label for="tagRepeat"><script>print('repeat');</script></label></div>
                                     <select class="form-control" id="tagRepeat">
-                                        <option><script>print('weekly');</script></option>
-                                        <option><script>print('even week');</script></option>
-                                        <option><script>print('odd week');</script></option>
+                                        <option value="0"><script>print('weekly');</script></option>
+                                        <option value="1"><script>print('even week');</script></option>
+                                        <option value="2"><script>print('odd week');</script></option>
                                     </select>
                                 </div>
                             </div>
@@ -168,8 +168,8 @@
                             <div class="panel-heading"><label for="tagOverride"><script>print('override other tags')</script></label></div>
                             <div class="panel-body">
                                 <select id="tagOverride" class="form-control inputShort">
-                                    <option id="0"><script>print('no');</script></option>
-                                    <option id="1"><script>print('yes');</script></option>
+                                    <option id="0" value="0"><script>print('no');</script></option>
+                                    <option id="1" value="1"><script>print('yes');</script></option>
                                 </select>
                             </div>
                         </div>
