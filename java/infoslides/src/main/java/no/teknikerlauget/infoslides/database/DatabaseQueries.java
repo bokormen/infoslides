@@ -1,9 +1,6 @@
 package no.teknikerlauget.infoslides.database;
 
-import no.teknikerlauget.infoslides.data.Day;
-import no.teknikerlauget.infoslides.data.Slide;
-import no.teknikerlauget.infoslides.data.Tag;
-import no.teknikerlauget.infoslides.data.Theme;
+import no.teknikerlauget.infoslides.data.*;
 
 import javax.swing.text.StyledEditorKit;
 import java.io.File;
@@ -41,7 +38,32 @@ public class DatabaseQueries extends DatabaseConnector {
 		String currentClockTime = getCurrentClockTime();
 		String currentDate = getCurrentDate();
 		List<Slide> slides = new ArrayList<Slide>();
+
 		//TODO
+		try {
+			Repeat repeat = getWeekRepeat(Calendar.WEEK_OF_YEAR);
+			//TODO make a good query
+			String query = "SELECT * FROM slides;";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("Slideid");
+				String title = resultSet.getString("Title");
+				String text = resultSet.getString("Slidetext");
+				String picture = resultSet.getString("Picture");
+				Theme theme = getTheme(resultSet.getInt("Themeid"));
+				List<Integer> tags = getTagsToSlide(id);
+				Slide slide = new Slide(id,title,text,picture,theme,tags);
+				slides.add(slide);
+			}
+
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 		return slides;
 	}
 
@@ -313,6 +335,14 @@ public class DatabaseQueries extends DatabaseConnector {
 	private String getCurrentDate() {
 		Calendar current = new GregorianCalendar();
 		return simpleDateFormat.format(current.getTime());
+	}
+
+	private Repeat getWeekRepeat(int weekNumber) {
+			if ((weekNumber%2)==0) {
+				return Repeat.EVEN_WEEKS;
+			} else {
+				return Repeat.ODD_WEEKS;
+			}
 	}
 
 	public boolean isTagUnique() {

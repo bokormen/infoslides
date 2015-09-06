@@ -25,8 +25,8 @@ public class TestData {
 		for (int i = 0; i < 5; i++) {
 			String tagName = "TestTagNr" + Integer.toString(i+1);
 			Boolean trueFalse = new Random().nextBoolean();
-			String startDate =  "2015-03-" + String.format("%02d", i);
-			String endDate = "2015-08-" + String.format("%02d", i);
+			String startDate =  "2015-08-" + String.format("%02d", i);
+			String endDate = "2015-12-" + String.format("%02d", i);
 			Repeat repeat = Repeat.values()[i % 3];
 
 			Tag tag = new Tag(-1, tagName , trueFalse , startDate, endDate , getNewDays(), repeat);
