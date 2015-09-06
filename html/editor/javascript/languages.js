@@ -43,7 +43,7 @@ var indices = [
 ];
 
 var nb_NO = [
-    'Sider',
+    'Slides',
     'Tags',
     'Temaer',
     'Tittel',
@@ -58,7 +58,7 @@ var nb_NO = [
     'Lagre',
     'Slett',
     'Velg et bilde',
-    'Legg til Side',
+    'Legg til Slide',
     'Legg til Tag',
     'Legg til Tema',
     'Tag',
