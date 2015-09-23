@@ -1,9 +1,10 @@
 package no.teknikerlauget.infoslides.server;
 
-import no.teknikerlauget.infoslides.database.DatabaseConnector;
-import org.eclipse.jetty.util.preventers.SecurityProviderLeakPreventer;
+import no.teknikerlauget.infoslides.data.Slide;
+import no.teknikerlauget.infoslides.database.DatabaseQueries;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Sends the current slide to all listening clients
@@ -13,7 +14,7 @@ import java.io.File;
  */
 public class Sender {
 
-	private DatabaseConnector databaseConnector;
+	private DatabaseQueries databaseQueries;
 	private long sleepTime = 10000;
 	private boolean running = true;
 
@@ -21,19 +22,34 @@ public class Sender {
 	 * Construct a new sender
 	 */
 	public Sender(File databaseSettingsPath) {
-		this.databaseConnector = new DatabaseConnector(databaseSettingsPath);
-//		databaseConnector.open();
-		startSending();
+		this.databaseQueries = new DatabaseQueries(databaseSettingsPath);
+		List<Slide> slideShow = databaseQueries.getSlideshow();
+		databaseQueries.close();
+		startSending(slideShow);
 	}
 
 	/**
 	 * Start sending slides to clients
+	 *
+	 * @param slideShow
 	 */
-	private void startSending() {
+	private void startSending(List<Slide> slideShow) {
+		int i = 0;
+		int size = slideShow.size();
 		while (running) {
-			sendSlide();
+			sendSlide(slideShow.get(i++));
+			i %= size;
 			sleep(sleepTime);
 		}
+	}
+
+	/**
+	 * Send a slide to the clients
+	 *
+	 * @param slide is sent to the client
+	 */
+	private void sendSlide(Slide slide) {
+//		send(slide.toJson());
 	}
 
 	/**
@@ -48,12 +64,4 @@ public class Sender {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Send a slide to the clients
-	 */
-	private void sendSlide() {
-		// TODO
-	}
-
 }
