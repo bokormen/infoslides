@@ -2,7 +2,6 @@ package no.teknikerlauget.infoslides.database;
 
 import no.teknikerlauget.infoslides.data.*;
 
-import javax.swing.text.StyledEditorKit;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -77,7 +76,7 @@ public class DatabaseQueries extends DatabaseConnector {
 			PreparedStatement preparedStatement = connection.prepareStatement(line, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, slide.getTitle());
 			preparedStatement.setString(2, slide.getText());
-			preparedStatement.setString(3, slide.getPicture());
+			preparedStatement.setString(3, slide.getImage());
 			preparedStatement.setInt(4, slide.getTheme().getId());
 
 			preparedStatement.executeUpdate();

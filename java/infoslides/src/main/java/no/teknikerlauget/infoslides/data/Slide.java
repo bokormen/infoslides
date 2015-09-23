@@ -11,15 +11,15 @@ public class Slide {
 	private final int id;
 	private final String title;
 	private final String text;
-	private final String picture;
+	private final String image;
 	private final Theme theme;
 	private final List<Integer> tagIdList; //TODO should discuss changing list content to Tag instead of Integer
 
-	public Slide(int id, String title, String text, String picture, Theme theme, List<Integer> tagIdList) {
+	public Slide(int id, String title, String text, String image, Theme theme, List<Integer> tagIdList) {
 		this.id = id;
 		this.title = title;
 		this.text = text;
-		this.picture = picture;
+		this.image = image;
 		this.theme = theme;
 		this.tagIdList = tagIdList;
 	}
@@ -36,8 +36,8 @@ public class Slide {
 		return text;
 	}
 
-	public String getPicture() {
-		return picture;
+	public String getImage() {
+		return image;
 	}
 
 	public Theme getTheme() {
@@ -62,7 +62,7 @@ public class Slide {
 		if (id != slide.id) {
 			return false;
 		}
-		if (!picture.equals(slide.picture)) {
+		if (!image.equals(slide.image)) {
 			return false;
 		}
 		if (!tagIdList.equals(slide.tagIdList)) {
@@ -86,7 +86,7 @@ public class Slide {
 		int result = id;
 		result = 31 * result + title.hashCode();
 		result = 31 * result + text.hashCode();
-		result = 31 * result + picture.hashCode();
+		result = 31 * result + image.hashCode();
 		result = 31 * result + theme.hashCode();
 		result = 31 * result + tagIdList.hashCode();
 		return result;
@@ -98,7 +98,7 @@ public class Slide {
 				"id=" + id +
 				", title='" + title + '\'' +
 				", text='" + text + '\'' +
-				", picture='" + picture + '\'' +
+				", image='" + image + '\'' +
 				", theme=" + theme.getName() +
 				", tags=" + tagIdList +
 				'}';
@@ -110,7 +110,7 @@ public class Slide {
 		object.put("id", id);
 		object.put("title", title);
 		object.put("text", text);
-		object.put("picture", picture);
+		object.put("image", image);
 		object.put("theme", theme.toJson());
 		// Add tags
 		JSONArray jsonArray = new JSONArray();
@@ -123,7 +123,7 @@ public class Slide {
 		int id = Integer.parseInt(json.get("id").toString());
 		String title = json.get("title").toString();
 		String text = json.get("text").toString();
-		String picture = json.get("picture").toString();
+		String picture = json.get("image").toString();
 		Theme theme = Theme.fromJson((JSONObject) json.get("theme"));
 		JSONArray tagArray = (JSONArray) (json.get("tags"));
 		ArrayList<Integer> tags = new ArrayList<>();
